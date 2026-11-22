@@ -56,11 +56,11 @@ export const ShipVisualCard = ({
       <div className="absolute top-2.5 left-2.5 right-2.5 flex items-center justify-between gap-1 z-10">
         <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#07192F]/80 backdrop-blur-md border border-cyan-400/30 text-cyan-200 text-[10px] font-bold shadow-sm">
           <Navigation size={10} className="text-cyan-300" />
-          <span className="truncate max-w-[170px]">{vessel.route}</span>
+          <span className="truncate max-w-[160px]">{vessel.route}</span>
         </div>
 
-        <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-500/90 text-white text-[9px] font-extrabold uppercase tracking-wider shadow-sm">
-          <span>{vessel.badge}</span>
+        <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-600/90 text-white text-[9px] font-extrabold tracking-wider shadow-sm">
+          <span>{vessel.roi || vessel.badge}</span>
         </div>
       </div>
 
