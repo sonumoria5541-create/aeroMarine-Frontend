@@ -267,7 +267,6 @@ export const DepositPage = () => {
                   >
                     <option value="upi">UPI Transfer (GooglePay, PhonePe, Paytm)</option>
                     <option value="bank_transfer">IMPS / NEFT Net Banking</option>
-                    <option value="demo_transfer">Demo Sandbox Mock Transfer</option>
                   </select>
                 </div>
 

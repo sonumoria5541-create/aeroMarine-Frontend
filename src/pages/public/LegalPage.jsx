@@ -52,11 +52,11 @@ export const LegalPage = () => {
                 by these operational terms. All transactions are logged in an immutable double-entry ledger.
               </p>
 
-              <h3 className="text-base font-bold text-ocean-900">2. Demonstration & Simulation Mode</h3>
+              <h3 className="text-base font-bold text-ocean-900">2. Asset Operations & Fleet Unit Allocations</h3>
               <p>
-                The AeroMarine platform is presently configured in DEMO Mode. All container fleet units, balances, deposits,
-                withdrawals, and illustrative earning accruals are simulated demonstration assets with no cash conversion
-                obligation unless formal regulatory review is certified.
+                All container fleet allocations, wallet balances, deposit transactions, withdrawals, and daily operational freight
+                returns are managed in accordance with platform charter terms and immutable ledger accounting. Deposits are credited
+                upon banking verification and withdrawals are processed in accordance with scheduled clearance windows.
               </p>
 
               <h3 className="text-base font-bold text-ocean-900">3. Deposit & Withdrawal Workflow</h3>

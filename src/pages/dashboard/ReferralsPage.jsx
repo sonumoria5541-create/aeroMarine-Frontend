@@ -47,7 +47,7 @@ export const ReferralsPage = () => {
         <div className="space-y-1">
           <span className="text-xs font-bold uppercase tracking-wider text-teal-brand">Your Unique Referral Code</span>
           <p className="text-3xl sm:text-4xl font-mono font-black tracking-widest text-white">
-            {data?.referralCode || 'AMDEMO'}
+            {data?.referralCode || '------'}
           </p>
         </div>
 

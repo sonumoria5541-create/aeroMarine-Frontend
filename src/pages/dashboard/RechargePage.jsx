@@ -19,7 +19,7 @@ export const RechargePage = () => {
   const [toastMsg, setToastMsg] = useState('');
   const [toastType, setToastType] = useState('success');
 
-  const demoUpiId = 'aeromarine.cargo@okhdfcbank';
+  const officialUpiId = 'aeromarine.cargo@okhdfcbank';
 
   const showToast = (msg, type = 'success') => {
     setToastMsg(msg);
@@ -28,7 +28,7 @@ export const RechargePage = () => {
   };
 
   const handleCopyUpi = () => {
-    navigator.clipboard.writeText(demoUpiId);
+    navigator.clipboard.writeText(officialUpiId);
     setCopiedUpi(true);
     setTimeout(() => setCopiedUpi(false), 2000);
   };
@@ -330,7 +330,7 @@ export const RechargePage = () => {
             <div className="mb-4">
               <label className="text-[11px] font-bold text-slate-500">Official AeroMarine UPI ID:</label>
               <div className="mt-1 flex items-center justify-between p-2.5 bg-slate-50 border border-slate-200 rounded-xl">
-                <span className="text-xs font-mono font-bold text-slate-800">{demoUpiId}</span>
+                <span className="text-xs font-mono font-bold text-slate-800">{officialUpiId}</span>
                 <button
                   type="button"
                   onClick={handleCopyUpi}
