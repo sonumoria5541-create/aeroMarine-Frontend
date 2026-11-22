@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Phone, Lock, Eye, EyeOff, Ship, Anchor } from 'lucide-react';
+import { Phone, Lock, Eye, EyeOff, Ship, Anchor, AlertCircle } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { AeroMarineLogo } from '../../components/common/AeroMarineLogo';
 
@@ -33,7 +33,8 @@ export const LoginPage = () => {
       await login(cleanPhone, password);
       navigate('/');
     } catch (err) {
-      setError(err.message || 'Login failed. Please check your credentials.');
+      const msg = err.response?.data?.message || err.message || 'Login failed. Please check your credentials.';
+      setError(msg);
     } finally {
       setLoading(false);
     }
@@ -80,8 +81,9 @@ export const LoginPage = () => {
           </div>
 
           {error && (
-            <div className="mb-4 p-3 rounded-2xl bg-rose-50 border border-rose-100 text-rose-600 text-xs font-semibold animate-in fade-in">
-              {error}
+            <div className="mb-4 p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold flex items-center gap-2 animate-in fade-in">
+              <AlertCircle size={17} className="text-rose-500 shrink-0" />
+              <span>{error}</span>
             </div>
           )}
 

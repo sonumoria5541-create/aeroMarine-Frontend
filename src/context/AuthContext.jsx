@@ -27,27 +27,37 @@ export const AuthProvider = ({ children }) => {
   }, [fetchCurrentUser]);
 
   const login = async (phone, password) => {
-    const res = await api.post('/auth/login', { phone, password });
-    if (res.data?.status === 'success') {
-      if (res.data.token) {
-        localStorage.setItem('aeromarine_token', res.data.token);
+    try {
+      const res = await api.post('/auth/login', { phone, password });
+      if (res.data?.status === 'success') {
+        if (res.data.token) {
+          localStorage.setItem('aeromarine_token', res.data.token);
+        }
+        setUser(res.data.user);
+        return res.data;
       }
-      setUser(res.data.user);
-      return res.data;
+      throw new Error(res.data?.message || 'Login failed');
+    } catch (err) {
+      const msg = err.response?.data?.message || err.message || 'Login failed. Please check credentials.';
+      throw new Error(msg);
     }
-    throw new Error(res.data?.message || 'Login failed');
   };
 
   const register = async ({ phone, password, inviteCode }) => {
-    const res = await api.post('/auth/register', { phone, password, inviteCode });
-    if (res.data?.status === 'success') {
-      if (res.data.token) {
-        localStorage.setItem('aeromarine_token', res.data.token);
+    try {
+      const res = await api.post('/auth/register', { phone, password, inviteCode });
+      if (res.data?.status === 'success') {
+        if (res.data.token) {
+          localStorage.setItem('aeromarine_token', res.data.token);
+        }
+        setUser(res.data.user);
+        return res.data;
       }
-      setUser(res.data.user);
-      return res.data;
+      throw new Error(res.data?.message || 'Registration failed');
+    } catch (err) {
+      const msg = err.response?.data?.message || err.message || 'Registration failed. Please try again.';
+      throw new Error(msg);
     }
-    throw new Error(res.data?.message || 'Registration failed');
   };
 
   const logout = async () => {

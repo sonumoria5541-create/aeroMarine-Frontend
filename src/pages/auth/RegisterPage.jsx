@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { Phone, Lock, Eye, EyeOff, Ship, Users } from 'lucide-react';
+import { Phone, Lock, Eye, EyeOff, Ship, Users, AlertCircle } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { AeroMarineLogo } from '../../components/common/AeroMarineLogo';
 
@@ -37,7 +37,8 @@ export const RegisterPage = () => {
       await register({ phone: cleanPhone, password, inviteCode });
       navigate('/');
     } catch (err) {
-      setError(err.message || 'Registration failed. Please try again.');
+      const msg = err.response?.data?.message || err.message || 'Registration failed. Please try again.';
+      setError(msg);
     } finally {
       setLoading(false);
     }
@@ -82,8 +83,19 @@ export const RegisterPage = () => {
           </div>
 
           {error && (
-            <div className="mb-4 p-3 rounded-2xl bg-rose-50 border border-rose-100 text-rose-600 text-xs font-semibold animate-in fade-in">
-              {error}
+            <div className="mb-4 p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold flex items-center justify-between gap-2 animate-in fade-in">
+              <div className="flex items-center gap-2 text-left">
+                <AlertCircle size={17} className="text-rose-500 shrink-0" />
+                <span>{error}</span>
+              </div>
+              {error.toLowerCase().includes('already') && (
+                <Link
+                  to="/login"
+                  className="px-2.5 py-1 rounded-xl bg-rose-600 text-white text-[11px] font-bold shrink-0 hover:bg-rose-700 transition-colors shadow-sm"
+                >
+                  Login
+                </Link>
+              )}
             </div>
           )}
 
