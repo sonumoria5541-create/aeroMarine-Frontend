@@ -1,25 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import api from '../../lib/api';
-import { Settings, Save, CheckCircle2, ShieldCheck, Building2, QrCode } from 'lucide-react';
+import { Settings, Save, CheckCircle2, ShieldCheck, Building2, QrCode, AlertCircle, Bell } from 'lucide-react';
 
 export const AdminSettingsPage = () => {
   const [settings, setSettings] = useState({
-    deposit_bank_details: {
+    bankDetails: {
       bankName: 'HDFC Bank Ltd',
-      accountHolderName: 'AeroMarine Fleet Escrow India',
+      accountHolderName: 'AeroMarine Maritime Freight Escrow',
       accountNumber: '50200088991122',
       ifscCode: 'HDFC0001234',
       branch: 'Port Complex Nariman Point, Mumbai',
-      upiId: 'aeromarine@icici',
     },
-    financial_limits: {
-      minDeposit: 100,
-      maxDeposit: 10000000,
-      minWithdrawal: 200,
-      maxWithdrawal: 1000000,
-      withdrawalFeePercent: 0,
-    },
-    demo_mode: true,
+    upiId: 'aeromarine.cargo@okhdfcbank',
+    minDeposit: 250,
+    maxDeposit: 10000000,
+    minWithdrawal: 120,
+    maxWithdrawal: 1000000,
+    withdrawalFeePercent: 0,
+    maintenanceMode: false,
+    announcement: '',
+    supportEmail: 'compliance@aeromarine.site',
   });
 
   const [loading, setLoading] = useState(true);
@@ -32,10 +32,23 @@ export const AdminSettingsPage = () => {
         setLoading(true);
         const res = await api.get('/admin/settings');
         if (res.data?.success && Object.keys(res.data.data).length > 0) {
-          setSettings((prev) => ({ ...prev, ...res.data.data }));
+          const d = res.data.data;
+          setSettings((prev) => ({
+            ...prev,
+            ...d,
+            bankDetails: d.bankDetails || d.deposit_bank_details || prev.bankDetails,
+            upiId: d.upiId || d.deposit_bank_details?.upiId || prev.upiId,
+            minDeposit: d.minDeposit ?? d.financial_limits?.minDeposit ?? prev.minDeposit,
+            minWithdrawal: d.minWithdrawal ?? d.financial_limits?.minWithdrawal ?? prev.minWithdrawal,
+            maxWithdrawal: d.maxWithdrawal ?? d.financial_limits?.maxWithdrawal ?? prev.maxWithdrawal,
+            withdrawalFeePercent: d.withdrawalFeePercent ?? d.financial_limits?.withdrawalFeePercent ?? prev.withdrawalFeePercent,
+            maintenanceMode: d.maintenanceMode ?? false,
+            announcement: d.announcement || '',
+            supportEmail: d.supportEmail || 'compliance@aeromarine.site',
+          }));
         }
       } catch (e) {
-        console.error(e);
+        console.error('Failed to load settings:', e);
       } finally {
         setLoading(false);
       }
@@ -48,9 +61,27 @@ export const AdminSettingsPage = () => {
     try {
       setSubmitting(true);
       setNotice('');
-      const res = await api.patch('/admin/settings', settings);
+
+      // Send both flat and nested keys to guarantee cross-compatibility with all controllers
+      const payload = {
+        ...settings,
+        deposit_bank_details: {
+          ...settings.bankDetails,
+          upiId: settings.upiId,
+        },
+        financial_limits: {
+          minDeposit: settings.minDeposit,
+          maxDeposit: settings.maxDeposit,
+          minWithdrawal: settings.minWithdrawal,
+          maxWithdrawal: settings.maxWithdrawal,
+          withdrawalFeePercent: settings.withdrawalFeePercent,
+        },
+      };
+
+      const res = await api.patch('/admin/settings', payload);
       if (res.data?.success) {
-        setNotice('System settings saved and applied to platform.');
+        setNotice('Platform settings saved and successfully applied to operational ledger.');
+        setTimeout(() => setNotice(''), 4000);
       }
     } catch (e) {
       alert(e.response?.data?.message || 'Failed to save settings.');
@@ -64,23 +95,23 @@ export const AdminSettingsPage = () => {
       <div className="pb-4 border-b border-slate-200">
         <h1 className="text-2xl font-black font-display text-ocean-900">Platform Operational Settings</h1>
         <p className="text-xs text-slate-500 mt-0.5">
-          Configure bank settlement coordinates, operational thresholds, and compliance mode
+          Configure bank settlement coordinates, operational financial thresholds, and security controls
         </p>
       </div>
 
       {notice && (
-        <div className="p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-2xl flex items-center gap-2 text-xs font-semibold">
-          <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+        <div className="p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-2xl flex items-center gap-2.5 text-xs font-semibold shadow-sm">
+          <CheckCircle2 className="w-5 h-5 text-emerald-600 flex-shrink-0" />
           <span>{notice}</span>
         </div>
       )}
 
       <form onSubmit={handleSave} className="space-y-6 text-xs">
-        {/* Bank & UPI Transfer Coordinates */}
+        {/* Deposit Bank & UPI Coordinates */}
         <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-subtle space-y-4">
           <div className="flex items-center gap-2 pb-3 border-b border-slate-100">
             <Building2 className="w-5 h-5 text-teal-brand" />
-            <h3 className="font-bold text-ocean-900 text-sm">Deposit Bank & UPI Transfer Coordinates</h3>
+            <h3 className="font-bold text-ocean-900 text-sm">Deposit Bank & UPI Settlement Coordinates</h3>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -88,14 +119,15 @@ export const AdminSettingsPage = () => {
               <label className="font-bold text-ocean-900">Bank Name</label>
               <input
                 type="text"
-                value={settings.deposit_bank_details?.bankName || ''}
+                required
+                value={settings.bankDetails?.bankName || ''}
                 onChange={(e) =>
                   setSettings({
                     ...settings,
-                    deposit_bank_details: { ...settings.deposit_bank_details, bankName: e.target.value },
+                    bankDetails: { ...settings.bankDetails, bankName: e.target.value },
                   })
                 }
-                className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:border-teal-brand"
+                className="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 text-slate-800 text-xs focus:outline-none focus:border-teal-brand"
               />
             </div>
 
@@ -103,14 +135,15 @@ export const AdminSettingsPage = () => {
               <label className="font-bold text-ocean-900">Account Holder Name</label>
               <input
                 type="text"
-                value={settings.deposit_bank_details?.accountHolderName || ''}
+                required
+                value={settings.bankDetails?.accountHolderName || ''}
                 onChange={(e) =>
                   setSettings({
                     ...settings,
-                    deposit_bank_details: { ...settings.deposit_bank_details, accountHolderName: e.target.value },
+                    bankDetails: { ...settings.bankDetails, accountHolderName: e.target.value },
                   })
                 }
-                className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:border-teal-brand"
+                className="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 text-slate-800 text-xs focus:outline-none focus:border-teal-brand"
               />
             </div>
 
@@ -118,14 +151,15 @@ export const AdminSettingsPage = () => {
               <label className="font-bold text-ocean-900">Account Number</label>
               <input
                 type="text"
-                value={settings.deposit_bank_details?.accountNumber || ''}
+                required
+                value={settings.bankDetails?.accountNumber || ''}
                 onChange={(e) =>
                   setSettings({
                     ...settings,
-                    deposit_bank_details: { ...settings.deposit_bank_details, accountNumber: e.target.value },
+                    bankDetails: { ...settings.bankDetails, accountNumber: e.target.value },
                   })
                 }
-                className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-mono focus:outline-none focus:border-teal-brand"
+                className="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 text-slate-800 font-mono text-xs focus:outline-none focus:border-teal-brand"
               />
             </div>
 
@@ -133,53 +167,67 @@ export const AdminSettingsPage = () => {
               <label className="font-bold text-ocean-900">IFSC Code</label>
               <input
                 type="text"
-                value={settings.deposit_bank_details?.ifscCode || ''}
+                required
+                value={settings.bankDetails?.ifscCode || ''}
                 onChange={(e) =>
                   setSettings({
                     ...settings,
-                    deposit_bank_details: { ...settings.deposit_bank_details, ifscCode: e.target.value.toUpperCase() },
+                    bankDetails: { ...settings.bankDetails, ifscCode: e.target.value.toUpperCase() },
                   })
                 }
-                className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-mono uppercase focus:outline-none focus:border-teal-brand"
+                className="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 text-slate-800 font-mono uppercase text-xs focus:outline-none focus:border-teal-brand"
               />
             </div>
 
-            <div className="sm:col-span-2 space-y-1">
-              <label className="font-bold text-ocean-900">Official UPI ID</label>
+            <div className="space-y-1">
+              <label className="font-bold text-ocean-900">Bank Branch</label>
               <input
                 type="text"
-                value={settings.deposit_bank_details?.upiId || ''}
+                value={settings.bankDetails?.branch || ''}
                 onChange={(e) =>
                   setSettings({
                     ...settings,
-                    deposit_bank_details: { ...settings.deposit_bank_details, upiId: e.target.value },
+                    bankDetails: { ...settings.bankDetails, branch: e.target.value },
                   })
                 }
-                className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-mono focus:outline-none focus:border-teal-brand"
+                className="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 text-slate-800 text-xs focus:outline-none focus:border-teal-brand"
+              />
+            </div>
+
+            <div className="space-y-1">
+              <label className="font-bold text-ocean-900">Official UPI ID for QR / Collect</label>
+              <input
+                type="text"
+                required
+                value={settings.upiId || ''}
+                onChange={(e) =>
+                  setSettings({
+                    ...settings,
+                    upiId: e.target.value,
+                  })
+                }
+                className="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 text-slate-800 font-mono text-xs focus:outline-none focus:border-teal-brand"
               />
             </div>
           </div>
         </div>
 
-        {/* Financial Limits */}
+        {/* Financial Limits & Fees */}
         <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-subtle space-y-4">
-          <h3 className="font-bold text-ocean-900 text-sm pb-3 border-b border-slate-100">
-            Financial Limits & Fees
-          </h3>
+          <div className="flex items-center gap-2 pb-3 border-b border-slate-100">
+            <QrCode className="w-5 h-5 text-container-orange" />
+            <h3 className="font-bold text-ocean-900 text-sm">Financial Thresholds & Policy</h3>
+          </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             <div className="space-y-1">
               <label className="font-bold text-ocean-900">Min Deposit (₹)</label>
               <input
                 type="number"
-                value={settings.financial_limits?.minDeposit || 100}
-                onChange={(e) =>
-                  setSettings({
-                    ...settings,
-                    financial_limits: { ...settings.financial_limits, minDeposit: Number(e.target.value) },
-                  })
-                }
-                className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:border-teal-brand"
+                min="10"
+                value={settings.minDeposit}
+                onChange={(e) => setSettings({ ...settings, minDeposit: Number(e.target.value) })}
+                className="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 text-slate-800 text-xs focus:outline-none focus:border-teal-brand"
               />
             </div>
 
@@ -187,14 +235,21 @@ export const AdminSettingsPage = () => {
               <label className="font-bold text-ocean-900">Min Withdrawal (₹)</label>
               <input
                 type="number"
-                value={settings.financial_limits?.minWithdrawal || 200}
-                onChange={(e) =>
-                  setSettings({
-                    ...settings,
-                    financial_limits: { ...settings.financial_limits, minWithdrawal: Number(e.target.value) },
-                  })
-                }
-                className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:border-teal-brand"
+                min="10"
+                value={settings.minWithdrawal}
+                onChange={(e) => setSettings({ ...settings, minWithdrawal: Number(e.target.value) })}
+                className="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 text-slate-800 text-xs focus:outline-none focus:border-teal-brand"
+              />
+            </div>
+
+            <div className="space-y-1">
+              <label className="font-bold text-ocean-900">Max Withdrawal (₹)</label>
+              <input
+                type="number"
+                min="1000"
+                value={settings.maxWithdrawal}
+                onChange={(e) => setSettings({ ...settings, maxWithdrawal: Number(e.target.value) })}
+                className="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 text-slate-800 text-xs focus:outline-none focus:border-teal-brand"
               />
             </div>
 
@@ -202,22 +257,51 @@ export const AdminSettingsPage = () => {
               <label className="font-bold text-ocean-900">Withdrawal Fee (%)</label>
               <input
                 type="number"
-                value={settings.financial_limits?.withdrawalFeePercent || 0}
-                onChange={(e) =>
-                  setSettings({
-                    ...settings,
-                    financial_limits: { ...settings.financial_limits, withdrawalFeePercent: Number(e.target.value) },
-                  })
-                }
-                className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:border-teal-brand"
+                min="0"
+                max="30"
+                value={settings.withdrawalFeePercent}
+                onChange={(e) => setSettings({ ...settings, withdrawalFeePercent: Number(e.target.value) })}
+                className="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 text-slate-800 text-xs focus:outline-none focus:border-teal-brand"
               />
+            </div>
+          </div>
+        </div>
+
+        {/* Platform Status & Communications */}
+        <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-subtle space-y-4">
+          <div className="flex items-center gap-2 pb-3 border-b border-slate-100">
+            <Bell className="w-5 h-5 text-teal-brand" />
+            <h3 className="font-bold text-ocean-900 text-sm">Platform Status & Announcements</h3>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="space-y-1">
+              <label className="font-bold text-ocean-900">System Mode</label>
+              <div className="p-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold text-emerald-700 flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span>Production Mode (High-Security Ledger)</span>
+              </div>
             </div>
 
             <div className="space-y-1">
-              <label className="font-bold text-ocean-900">Platform Mode</label>
-              <div className="p-2 bg-slate-50 border border-slate-200 rounded-xl font-bold text-amber-700">
-                DEMO Simulation
-              </div>
+              <label className="font-bold text-ocean-900">Operations Support Email</label>
+              <input
+                type="email"
+                value={settings.supportEmail}
+                onChange={(e) => setSettings({ ...settings, supportEmail: e.target.value })}
+                className="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 text-slate-800 text-xs focus:outline-none focus:border-teal-brand"
+              />
+            </div>
+
+            <div className="sm:col-span-2 space-y-1">
+              <label className="font-bold text-ocean-900">Public Platform Announcement (Optional)</label>
+              <input
+                type="text"
+                value={settings.announcement}
+                onChange={(e) => setSettings({ ...settings, announcement: e.target.value })}
+                placeholder="Broadcast a maintenance notice or international shipping advisory..."
+                className="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 text-slate-800 text-xs focus:outline-none focus:border-teal-brand"
+              />
             </div>
           </div>
         </div>
@@ -225,10 +309,10 @@ export const AdminSettingsPage = () => {
         <button
           type="submit"
           disabled={submitting}
-          className="px-8 py-3.5 rounded-xl bg-teal-brand hover:bg-teal-hover text-white font-bold text-xs shadow-md transition-colors flex items-center gap-2"
+          className="px-8 py-3.5 rounded-xl bg-container-orange hover:bg-container-orange/90 text-white font-bold text-xs shadow-md transition-all flex items-center gap-2"
         >
           <Save className="w-4 h-4" />
-          <span>{submitting ? 'Saving Configuration...' : 'Save System Settings'}</span>
+          <span>{submitting ? 'Applying Changes...' : 'Save & Deploy System Settings'}</span>
         </button>
       </form>
     </div>

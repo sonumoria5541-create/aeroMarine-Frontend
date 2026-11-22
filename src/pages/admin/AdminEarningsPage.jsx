@@ -26,7 +26,7 @@ export const AdminEarningsPage = () => {
   };
 
   const handlePostBatch = async () => {
-    if (!window.confirm(`Post simulated daily earning batch for period ${period}?`)) return;
+    if (!window.confirm(`Post daily fleet charter earning batch for period ${period}?`)) return;
     try {
       setPostingBatch(true);
       setPostNotice('');
@@ -45,18 +45,17 @@ export const AdminEarningsPage = () => {
   return (
     <div className="space-y-6">
       <div className="pb-4 border-b border-slate-200">
-        <h1 className="text-2xl font-black font-display text-ocean-900">Daily Earnings Engine Desk</h1>
+        <h1 className="text-2xl font-black font-display text-ocean-900">Daily Fleet Earnings Engine</h1>
         <p className="text-xs text-slate-500 mt-0.5">
-          Preview formulas and execute idempotent daily charter accrual batches (Demo Simulation)
+          Execute idempotent daily charter revenue accrual batches and credit member ledgers
         </p>
       </div>
 
-      <div className="bg-amber-500/10 border border-amber-500/25 p-4 rounded-2xl flex items-start gap-3 text-xs text-amber-900">
-        <ShieldAlert className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+      <div className="bg-ocean-50 border border-ocean-200 p-4 rounded-2xl flex items-start gap-3 text-xs text-ocean-900">
+        <TrendingUp className="w-5 h-5 text-teal-brand flex-shrink-0 mt-0.5" />
         <div>
-          <strong className="block text-amber-950 font-bold mb-0.5">Simulation Compliance Invariant:</strong>
-          In DEMO mode, all earnings carry <code className="bg-amber-200/60 px-1 py-0.5 rounded">isDemo: true</code>.
-          Accruals will be credited to user ledgers as simulated fleet earnings for testing the dashboard.
+          <strong className="block text-ocean-950 font-bold mb-0.5">Automated Idempotent Engine:</strong>
+          Daily charter revenue batches are computed per active container lease. Posting is strictly idempotent—running multiple times for the same calendar date will safely skip already processed container allocations.
         </div>
       </div>
 

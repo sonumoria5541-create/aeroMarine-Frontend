@@ -20,7 +20,16 @@ import { BankCardPage } from '../pages/dashboard/BankCardPage';
 import { RecordsPage } from '../pages/dashboard/RecordsPage';
 import { SecurityPage } from '../pages/dashboard/SecurityPage';
 import { MessagesPage } from '../pages/dashboard/MessagesPage';
-import { AdminPage } from '../pages/admin/AdminPage';
+import { AdminLayout } from '../components/layout/AdminLayout';
+import { AdminOverviewPage } from '../pages/admin/AdminOverviewPage';
+import { AdminDepositsPage } from '../pages/admin/AdminDepositsPage';
+import { AdminWithdrawalsPage } from '../pages/admin/AdminWithdrawalsPage';
+import { AdminUsersPage } from '../pages/admin/AdminUsersPage';
+import { AdminPlansPage } from '../pages/admin/AdminPlansPage';
+import { AdminOrdersPage } from '../pages/admin/AdminOrdersPage';
+import { AdminEarningsPage } from '../pages/admin/AdminEarningsPage';
+import { AdminSettingsPage } from '../pages/admin/AdminSettingsPage';
+import { AdminAuditLogsPage } from '../pages/admin/AdminAuditLogsPage';
 
 export const AppRoutes = () => {
   return (
@@ -226,16 +235,27 @@ export const AppRoutes = () => {
             </ProtectedRoute>
           }
         />
+      </Route>
 
-        {/* Admin Route */}
-        <Route
-          path="/admin"
-          element={
-            <AdminRoute>
-              <AdminPage />
-            </AdminRoute>
-          }
-        />
+      {/* Dedicated Admin Control Center (Full-Width Responsive Desktop & Mobile Drawer) */}
+      <Route
+        path="/admin"
+        element={
+          <AdminRoute>
+            <AdminLayout />
+          </AdminRoute>
+        }
+      >
+        <Route index element={<AdminOverviewPage />} />
+        <Route path="deposits" element={<AdminDepositsPage />} />
+        <Route path="withdrawals" element={<AdminWithdrawalsPage />} />
+        <Route path="users" element={<AdminUsersPage />} />
+        <Route path="plans" element={<AdminPlansPage />} />
+        <Route path="containers" element={<AdminPlansPage />} />
+        <Route path="orders" element={<AdminOrdersPage />} />
+        <Route path="earnings" element={<AdminEarningsPage />} />
+        <Route path="settings" element={<AdminSettingsPage />} />
+        <Route path="audit-logs" element={<AdminAuditLogsPage />} />
       </Route>
 
       {/* Catch-all redirect */}

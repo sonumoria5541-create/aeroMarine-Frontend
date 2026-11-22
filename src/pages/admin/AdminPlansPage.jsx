@@ -22,7 +22,7 @@ export const AdminPlansPage = () => {
     dailyRatePercent: 1.2,
     availableUnits: 50,
     riskLabel: 'Maritime Commercial Risk',
-    riskDisclosure: 'Illustrative simulation only.',
+    riskDisclosure: 'Governed by AeroMarine standard marine cargo charter terms.',
     status: 'active',
   });
 
@@ -58,7 +58,7 @@ export const AdminPlansPage = () => {
       dailyRatePercent: 1.2,
       availableUnits: 50,
       riskLabel: 'Maritime Commercial Risk',
-      riskDisclosure: 'Illustrative simulation only.',
+      riskDisclosure: 'Governed by AeroMarine standard marine cargo charter terms.',
       status: 'active',
     });
     setModalOpen(true);
@@ -91,7 +91,7 @@ export const AdminPlansPage = () => {
         <div>
           <h1 className="text-2xl font-black font-display text-ocean-900">Container Fleet Plans</h1>
           <p className="text-xs text-slate-500 mt-0.5">
-            Configure standardized container units, duration terms, and illustrative rates
+            Configure standardized container units, duration terms, and operational yield rates
           </p>
         </div>
 

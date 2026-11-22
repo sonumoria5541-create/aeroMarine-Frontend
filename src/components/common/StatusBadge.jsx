@@ -48,6 +48,16 @@ const statusConfig = {
     bg: 'bg-rose-50 text-rose-700 border-rose-200',
     icon: AlertCircle,
   },
+  blocked: {
+    label: 'Blocked',
+    bg: 'bg-red-100 text-red-800 border-red-300',
+    icon: AlertCircle,
+  },
+  archived: {
+    label: 'Archived',
+    bg: 'bg-slate-100 text-slate-600 border-slate-300',
+    icon: AlertCircle,
+  },
 };
 
 export const StatusBadge = ({ status, className }) => {

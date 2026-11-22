@@ -30,8 +30,12 @@ export const LoginPage = () => {
 
     setLoading(true);
     try {
-      await login(cleanPhone, password);
-      navigate('/');
+      const res = await login(cleanPhone, password);
+      if (['owner', 'admin', 'finance', 'support', 'operations'].includes(res?.user?.role)) {
+        navigate('/admin');
+      } else {
+        navigate('/');
+      }
     } catch (err) {
       const msg = err.response?.data?.message || err.message || 'Login failed. Please check your credentials.';
       setError(msg);

@@ -82,10 +82,10 @@ export const AdminAuditLogsPage = () => {
         )}
 
         {/* Pagination */}
-        {pagination.totalPages > 1 && (
+        {(pagination.pages > 1 || pagination.totalPages > 1) && (
           <div className="p-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between text-xs">
             <span className="text-slate-500">
-              Page {pagination.page} of {pagination.totalPages} ({pagination.total} audit events)
+              Page {pagination.page || page} of {pagination.pages || pagination.totalPages} ({pagination.total || logs.length} audit events)
             </span>
             <div className="flex gap-2">
               <button
@@ -96,7 +96,7 @@ export const AdminAuditLogsPage = () => {
                 Previous
               </button>
               <button
-                disabled={page >= pagination.totalPages}
+                disabled={page >= (pagination.pages || pagination.totalPages)}
                 onClick={() => setPage((p) => p + 1)}
                 className="px-3 py-1 rounded-lg border border-slate-200 bg-white disabled:opacity-40"
               >
