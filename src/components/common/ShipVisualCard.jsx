@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Ship, Anchor, Navigation, Waves, Gauge, Compass } from 'lucide-react';
 import { getVesselData } from '../../lib/vesselVisuals';
 
@@ -12,6 +12,11 @@ export const ShipVisualCard = ({
   const [imgError, setImgError] = useState(false);
   const [imgLoaded, setImgLoaded] = useState(false);
   const vessel = getVesselData(planName, category);
+
+  useEffect(() => {
+    setImgLoaded(false);
+    setImgError(false);
+  }, [vessel.imageUrl]);
 
   return (
     <div
