@@ -86,10 +86,13 @@ export const AdminPlansPage = () => {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200">
-        <div>
-          <h1 className="text-2xl font-black font-display text-ocean-900">Container Fleet Plans</h1>
+    <div className="space-y-4 sm:space-y-6 max-w-full overflow-hidden">
+      {/* Page Title & Action Controls */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 pb-3 sm:pb-4 border-b border-slate-200">
+        <div className="min-w-0">
+          <h1 className="text-xl sm:text-2xl font-black font-display text-ocean-900 tracking-tight">
+            Container Fleet Plans
+          </h1>
           <p className="text-xs text-slate-500 mt-0.5">
             Configure standardized container units, duration terms, and operational yield rates
           </p>
@@ -97,20 +100,21 @@ export const AdminPlansPage = () => {
 
         <button
           onClick={openCreateModal}
-          className="px-4 py-2 rounded-xl bg-teal-brand hover:bg-teal-hover text-white text-xs font-bold transition-all shadow-md flex items-center gap-1.5"
+          className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-teal-brand hover:bg-teal-hover text-white text-xs font-bold transition-all shadow-md flex items-center justify-center gap-1.5 flex-shrink-0"
         >
           <Plus className="w-4 h-4" />
           <span>Create Container Plan</span>
         </button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* Plans Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         {plans.map((p) => (
           <div
             key={p._id}
-            className="bg-white rounded-2xl border border-slate-200 shadow-subtle p-5 flex flex-col justify-between space-y-4"
+            className="bg-white rounded-2xl sm:rounded-3xl border border-slate-200 shadow-subtle p-4 sm:p-5 flex flex-col justify-between space-y-3 sm:space-y-4"
           >
-            <div className="space-y-3">
+            <div className="space-y-2.5 sm:space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-[10px] font-bold uppercase bg-slate-100 text-slate-700 px-2 py-0.5 rounded">
                   {p.category}
@@ -118,11 +122,11 @@ export const AdminPlansPage = () => {
                 <span className="text-xs font-bold text-teal-brand uppercase">{p.status}</span>
               </div>
               <div>
-                <h3 className="font-bold text-ocean-900 text-base">{p.name}</h3>
-                <p className="text-xs text-slate-500 line-clamp-2 mt-1">{p.description}</p>
+                <h3 className="font-bold text-ocean-900 text-sm sm:text-base">{p.name}</h3>
+                <p className="text-xs text-slate-500 line-clamp-2 mt-0.5">{p.description}</p>
               </div>
 
-              <div className="bg-slate-50 p-3 rounded-xl text-xs space-y-1.5 border border-slate-100">
+              <div className="bg-slate-50 p-3 rounded-xl sm:rounded-2xl text-xs space-y-1.5 border border-slate-100">
                 <div className="flex justify-between">
                   <span className="text-slate-500">Unit Price:</span>
                   <span className="font-bold text-ocean-900">{formatINR(p.price)}</span>
@@ -144,7 +148,7 @@ export const AdminPlansPage = () => {
 
             <button
               onClick={() => openEditModal(p)}
-              className="w-full py-2 rounded-xl border border-slate-200 text-ocean-900 text-xs font-bold hover:bg-slate-50 flex items-center justify-center gap-1.5"
+              className="w-full py-2.5 rounded-xl border border-slate-200 text-ocean-900 text-xs font-bold hover:bg-slate-50 flex items-center justify-center gap-1.5 transition-colors"
             >
               <Edit className="w-3.5 h-3.5" />
               <span>Edit Plan Specifications</span>
@@ -159,9 +163,10 @@ export const AdminPlansPage = () => {
         onClose={() => setModalOpen(false)}
         title={editingPlan ? 'Edit Container Plan' : 'Create New Container Plan'}
         subtitle="Manage fleet dimensions, pricing, and compliance risk disclosures"
+        maxWidth="max-w-2xl"
       >
-        <form onSubmit={handleSave} className="space-y-4 text-xs">
-          <div className="grid grid-cols-2 gap-3">
+        <form onSubmit={handleSave} className="space-y-3.5 sm:space-y-4 text-xs">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="space-y-1">
               <label className="font-bold text-ocean-900">Plan Name</label>
               <input
@@ -174,7 +179,7 @@ export const AdminPlansPage = () => {
               />
             </div>
             <div className="space-y-1">
-              <label className="font-bold text-ocean-900">Slug (URL)</label>
+              <label className="font-bold text-ocean-900">Slug (URL identifier)</label>
               <input
                 type="text"
                 required
@@ -186,7 +191,7 @@ export const AdminPlansPage = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="space-y-1">
               <label className="font-bold text-ocean-900">Category</label>
               <select
@@ -201,7 +206,7 @@ export const AdminPlansPage = () => {
               </select>
             </div>
             <div className="space-y-1">
-              <label className="font-bold text-ocean-900">Unit Price (INR)</label>
+              <label className="font-bold text-ocean-900">Unit Price (₹)</label>
               <input
                 type="number"
                 min={100}
@@ -213,9 +218,9 @@ export const AdminPlansPage = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div className="space-y-1">
-              <label className="font-bold text-ocean-900">Term (Days)</label>
+              <label className="font-bold text-ocean-900">Charter Term (Days)</label>
               <input
                 type="number"
                 min={1}
@@ -226,10 +231,10 @@ export const AdminPlansPage = () => {
               />
             </div>
             <div className="space-y-1">
-              <label className="font-bold text-ocean-900">Rate (%/day)</label>
+              <label className="font-bold text-ocean-900">Yield Rate (%/day)</label>
               <input
                 type="number"
-                step="0.1"
+                step="0.01"
                 required
                 value={formData.dailyRatePercent}
                 onChange={(e) => setFormData({ ...formData, dailyRatePercent: Number(e.target.value) })}
@@ -237,7 +242,7 @@ export const AdminPlansPage = () => {
               />
             </div>
             <div className="space-y-1">
-              <label className="font-bold text-ocean-900">Units Available</label>
+              <label className="font-bold text-ocean-900">Available Units</label>
               <input
                 type="number"
                 min={0}
@@ -271,17 +276,17 @@ export const AdminPlansPage = () => {
             />
           </div>
 
-          <div className="pt-3 flex gap-2">
+          <div className="pt-2 sm:pt-3 flex flex-col sm:flex-row gap-2">
             <button
               type="button"
               onClick={() => setModalOpen(false)}
-              className="flex-1 py-2.5 rounded-xl border border-slate-200 font-bold hover:bg-slate-50"
+              className="w-full sm:w-auto flex-1 py-2.5 rounded-xl border border-slate-200 font-bold hover:bg-slate-50 transition-colors text-center order-2 sm:order-1"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="flex-1 py-2.5 rounded-xl bg-teal-brand hover:bg-teal-hover text-white font-bold shadow-md"
+              className="w-full sm:w-auto flex-1 py-2.5 rounded-xl bg-teal-brand hover:bg-teal-hover text-white font-bold shadow-md transition-colors text-center order-1 sm:order-2"
             >
               Save Plan
             </button>

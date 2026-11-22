@@ -62,7 +62,6 @@ export const AdminSettingsPage = () => {
       setSubmitting(true);
       setNotice('');
 
-      // Send both flat and nested keys to guarantee cross-compatibility with all controllers
       const payload = {
         ...settings,
         deposit_bank_details: {
@@ -91,30 +90,32 @@ export const AdminSettingsPage = () => {
   };
 
   return (
-    <div className="space-y-6 max-w-4xl">
-      <div className="pb-4 border-b border-slate-200">
-        <h1 className="text-2xl font-black font-display text-ocean-900">Platform Operational Settings</h1>
+    <div className="space-y-4 sm:space-y-6 max-w-4xl overflow-hidden">
+      <div className="pb-3 sm:pb-4 border-b border-slate-200">
+        <h1 className="text-xl sm:text-2xl font-black font-display text-ocean-900 tracking-tight">
+          Platform Operational Settings
+        </h1>
         <p className="text-xs text-slate-500 mt-0.5">
           Configure bank settlement coordinates, operational financial thresholds, and security controls
         </p>
       </div>
 
       {notice && (
-        <div className="p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-2xl flex items-center gap-2.5 text-xs font-semibold shadow-sm">
+        <div className="p-3 sm:p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-2xl flex items-center gap-2.5 text-xs font-semibold shadow-sm">
           <CheckCircle2 className="w-5 h-5 text-emerald-600 flex-shrink-0" />
           <span>{notice}</span>
         </div>
       )}
 
-      <form onSubmit={handleSave} className="space-y-6 text-xs">
+      <form onSubmit={handleSave} className="space-y-4 sm:space-y-6 text-xs">
         {/* Deposit Bank & UPI Coordinates */}
-        <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-subtle space-y-4">
-          <div className="flex items-center gap-2 pb-3 border-b border-slate-100">
-            <Building2 className="w-5 h-5 text-teal-brand" />
-            <h3 className="font-bold text-ocean-900 text-sm">Deposit Bank & UPI Settlement Coordinates</h3>
+        <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 sm:p-8 border border-slate-200 shadow-subtle space-y-3 sm:space-y-4">
+          <div className="flex items-center gap-2 pb-2.5 sm:pb-3 border-b border-slate-100">
+            <Building2 className="w-4 h-4 sm:w-5 sm:h-5 text-teal-brand flex-shrink-0" />
+            <h3 className="font-bold text-ocean-900 text-xs sm:text-sm">Deposit Bank & UPI Settlement Coordinates</h3>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <div className="space-y-1">
               <label className="font-bold text-ocean-900">Bank Name</label>
               <input
@@ -213,13 +214,13 @@ export const AdminSettingsPage = () => {
         </div>
 
         {/* Financial Limits & Fees */}
-        <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-subtle space-y-4">
-          <div className="flex items-center gap-2 pb-3 border-b border-slate-100">
-            <QrCode className="w-5 h-5 text-container-orange" />
-            <h3 className="font-bold text-ocean-900 text-sm">Financial Thresholds & Policy</h3>
+        <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 sm:p-8 border border-slate-200 shadow-subtle space-y-3 sm:space-y-4">
+          <div className="flex items-center gap-2 pb-2.5 sm:pb-3 border-b border-slate-100">
+            <QrCode className="w-4 h-4 sm:w-5 sm:h-5 text-container-orange flex-shrink-0" />
+            <h3 className="font-bold text-ocean-900 text-xs sm:text-sm">Financial Thresholds & Policy</h3>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
             <div className="space-y-1">
               <label className="font-bold text-ocean-900">Min Deposit (₹)</label>
               <input
@@ -268,13 +269,13 @@ export const AdminSettingsPage = () => {
         </div>
 
         {/* Platform Status & Communications */}
-        <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-subtle space-y-4">
-          <div className="flex items-center gap-2 pb-3 border-b border-slate-100">
-            <Bell className="w-5 h-5 text-teal-brand" />
-            <h3 className="font-bold text-ocean-900 text-sm">Platform Status & Announcements</h3>
+        <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 sm:p-8 border border-slate-200 shadow-subtle space-y-3 sm:space-y-4">
+          <div className="flex items-center gap-2 pb-2.5 sm:pb-3 border-b border-slate-100">
+            <Bell className="w-4 h-4 sm:w-5 sm:h-5 text-teal-brand flex-shrink-0" />
+            <h3 className="font-bold text-ocean-900 text-xs sm:text-sm">Platform Status & Announcements</h3>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <div className="space-y-1">
               <label className="font-bold text-ocean-900">System Mode</label>
               <div className="p-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold text-emerald-700 flex items-center gap-2">
@@ -309,7 +310,7 @@ export const AdminSettingsPage = () => {
         <button
           type="submit"
           disabled={submitting}
-          className="px-8 py-3.5 rounded-xl bg-container-orange hover:bg-container-orange/90 text-white font-bold text-xs shadow-md transition-all flex items-center gap-2"
+          className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-container-orange hover:bg-container-orange/90 text-white font-bold text-xs shadow-md transition-all flex items-center justify-center gap-2"
         >
           <Save className="w-4 h-4" />
           <span>{submitting ? 'Applying Changes...' : 'Save & Deploy System Settings'}</span>

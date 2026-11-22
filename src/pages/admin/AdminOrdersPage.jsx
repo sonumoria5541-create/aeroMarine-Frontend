@@ -39,48 +39,52 @@ export const AdminOrdersPage = () => {
   });
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200">
-        <div>
-          <h1 className="text-2xl font-black font-display text-ocean-900">Fleet Container Orders</h1>
+    <div className="space-y-4 sm:space-y-6 max-w-full overflow-hidden">
+      {/* Title & Search Bar */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 pb-3 sm:pb-4 border-b border-slate-200">
+        <div className="min-w-0">
+          <h1 className="text-xl sm:text-2xl font-black font-display text-ocean-900 tracking-tight">
+            Fleet Container Orders
+          </h1>
           <p className="text-xs text-slate-500 mt-0.5">
             Member fleet allocations, participation agreements, and operational timelines
           </p>
         </div>
 
-        <div className="flex items-center gap-2.5">
-          <div className="relative">
+        <div className="flex items-center gap-2 w-full sm:w-auto">
+          <div className="relative flex-1 sm:w-60">
             <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Search user, phone, or plan..."
-              className="pl-9 pr-4 py-2 rounded-xl bg-white border border-slate-200 text-xs w-56 text-slate-800 placeholder-slate-400 focus:outline-none focus:border-teal-brand shadow-sm"
+              className="w-full pl-9 pr-4 py-2 rounded-xl bg-white border border-slate-200 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-teal-brand shadow-sm"
             />
           </div>
 
           <button
             onClick={fetchOrders}
-            className="p-2 rounded-xl border border-slate-200 bg-white text-xs font-semibold hover:bg-slate-50 transition-colors shadow-sm text-slate-600"
+            className="p-2 rounded-xl border border-slate-200 bg-white text-xs font-semibold hover:bg-slate-50 transition-colors shadow-sm text-slate-600 flex-shrink-0"
             title="Refresh"
+            aria-label="Refresh orders"
           >
             <RefreshCw className="w-4 h-4" />
           </button>
         </div>
       </div>
 
-      {/* Tabs */}
-      <div className="flex items-center gap-2 text-xs">
+      {/* Tabs with Horizontal Swipe */}
+      <div className="flex items-center gap-2 overflow-x-auto pb-1 text-xs no-scrollbar">
         {[
           { id: 'all', label: `All Orders (${orders.length})` },
-          { id: 'running', label: `Active / Running (${orders.filter((o) => o.status === 'running').length})` },
+          { id: 'running', label: `Active (${orders.filter((o) => o.status === 'running').length})` },
           { id: 'completed', label: `Completed (${orders.filter((o) => o.status === 'completed').length})` },
         ].map((tab) => (
           <button
             key={tab.id}
             onClick={() => setStatusFilter(tab.id)}
-            className={`px-3.5 py-1.5 rounded-xl font-bold transition-all ${
+            className={`px-3 py-1.5 rounded-xl font-bold transition-all whitespace-nowrap flex-shrink-0 text-xs ${
               statusFilter === tab.id
                 ? 'bg-ocean-900 text-white shadow-sm'
                 : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200'
@@ -91,7 +95,7 @@ export const AdminOrdersPage = () => {
         ))}
       </div>
 
-      <div className="bg-white rounded-3xl border border-slate-200 shadow-subtle overflow-hidden">
+      <div className="bg-white rounded-2xl sm:rounded-3xl border border-slate-200 shadow-subtle overflow-hidden">
         {loading ? (
           <p className="text-xs text-slate-500 py-16 text-center">Loading orders...</p>
         ) : filteredOrders.length === 0 ? (
@@ -101,11 +105,11 @@ export const AdminOrdersPage = () => {
             {filteredOrders.map((ord) => (
               <div
                 key={ord._id}
-                className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-slate-50/80 transition-colors text-xs"
+                className="p-3.5 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 hover:bg-slate-50/80 transition-colors text-xs"
               >
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2">
-                    <span className="font-bold text-ocean-900 text-sm">{ord.planSnapshot?.name}</span>
+                <div className="space-y-1 min-w-0 flex-1">
+                  <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                    <span className="font-bold text-ocean-900 text-sm truncate">{ord.planSnapshot?.name}</span>
                     <StatusBadge status={ord.status} />
                   </div>
                   <p className="font-semibold text-ocean-900">
@@ -114,17 +118,17 @@ export const AdminOrdersPage = () => {
                   <p className="text-slate-500">
                     Duration: {ord.planSnapshot?.durationDays} Days &bull; Daily Rate: ~{ord.planSnapshot?.dailyRatePercent}%
                   </p>
-                  <p className="text-[11px] text-slate-400">
+                  <p className="text-[10px] sm:text-[11px] text-slate-400">
                     Acquired: {formatDate(ord.createdAt)} &bull; End Date: {formatDate(ord.endDate)}
                   </p>
                 </div>
 
-                <div className="sm:text-right space-y-0.5">
-                  <span className="text-base font-black font-display text-ocean-900 block">
-                    {formatINR(ord.amount)}
-                  </span>
+                <div className="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-100 sm:text-right">
                   <span className="text-[10px] text-slate-400 font-medium">
-                    Ledger Txn Debited
+                    Ledger Debited
+                  </span>
+                  <span className="text-base sm:text-lg font-black font-display text-ocean-900 block">
+                    {formatINR(ord.amount)}
                   </span>
                 </div>
               </div>

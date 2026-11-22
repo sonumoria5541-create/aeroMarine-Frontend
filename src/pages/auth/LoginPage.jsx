@@ -66,7 +66,7 @@ export const LoginPage = () => {
         </div>
 
         {/* Floating Card */}
-        <div className="relative z-20 mx-4 -mt-2 bg-white rounded-[32px] p-6 shadow-[0_16px_36px_-12px_rgba(11,37,69,0.15)] border border-slate-100">
+        <div className="relative z-20 mx-3 sm:mx-4 -mt-2 bg-white rounded-3xl p-4 sm:p-6 shadow-[0_16px_36px_-12px_rgba(11,37,69,0.15)] border border-slate-100">
           {/* Tabs */}
           <div className="flex border-b border-slate-100 pb-3 mb-6">
             <button

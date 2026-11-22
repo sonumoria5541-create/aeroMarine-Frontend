@@ -6,6 +6,9 @@ export default {
   ],
   theme: {
     extend: {
+      screens: {
+        'xs': '400px',
+      },
       colors: {
         ocean: {
           950: '#040F18',
