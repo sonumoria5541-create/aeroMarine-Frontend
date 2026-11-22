@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" fill="none">
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="oceanGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0B2545" />
+      <stop offset="50%" stop-color="#134074" />
+      <stop offset="100%" stop-color="#0077B6" />
+    </linearGradient>
+
+    <!-- Gold Accent Gradient -->
+    <linearGradient id="goldGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FDE047" />
+      <stop offset="50%" stop-color="#F59E0B" />
+      <stop offset="100%" stop-color="#D97706" />
+    </linearGradient>
+
+    <!-- Cyan Glow Gradient -->
+    <linearGradient id="cyanGrad2" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00B4D8" />
+      <stop offset="100%" stop-color="#90E0EF" />
+    </linearGradient>
+
+    <!-- Hull Gradient -->
+    <linearGradient id="hullGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="100%" stop-color="#CFE8FC" />
+    </linearGradient>
+
+    <filter id="shadow2" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#071324" flood-opacity="0.4" />
+    </filter>
+  </defs>
+
+  <!-- Circular Outer Badge -->
+  <circle cx="120" cy="120" r="112" fill="url(#oceanGrad2)" stroke="url(#goldGrad2)" stroke-width="4" filter="url(#shadow2)" />
+  <circle cx="120" cy="120" r="102" stroke="#00B4D8" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.4" />
+
+  <!-- Aero Wing Crest (Left & Right) -->
+  <path d="M 40 125 C 65 95, 95 90, 115 100 C 95 108, 70 120, 50 145 Z" fill="url(#cyanGrad2)" opacity="0.3" />
+  <path d="M 200 125 C 175 95, 145 90, 125 100 C 145 108, 170 120, 190 145 Z" fill="url(#cyanGrad2)" opacity="0.3" />
+
+  <!-- Navigation Compass Star at Mast -->
+  <g transform="translate(120, 56)">
+    <polygon points="0,-16 4,-4 16,0 4,4 0,16 -4,4 -16,0 -4,-4" fill="url(#goldGrad2)" />
+    <circle cx="0" cy="0" r="3" fill="#FFFFFF" />
+  </g>
+
+  <!-- Ship Mast & Antenna -->
+  <line x1="120" y1="68" x2="120" y2="108" stroke="url(#goldGrad2)" stroke-width="3" stroke-linecap="round" />
+  <line x1="108" y1="84" x2="132" y2="84" stroke="url(#goldGrad2)" stroke-width="2.5" stroke-linecap="round" />
+  <line x1="112" y1="94" x2="128" y2="94" stroke="url(#goldGrad2)" stroke-width="2" stroke-linecap="round" />
+
+  <!-- Bridge Superstructure -->
+  <rect x="110" y="98" width="20" height="14" rx="2" fill="#FFFFFF" opacity="0.95" />
+  <rect x="113" y="101" width="14" height="4" rx="1" fill="#0B2545" />
+
+  <!-- Stacked Cargo Containers (Color Coded Freight) -->
+  <g transform="translate(0, 5)">
+    <!-- Bottom row -->
+    <rect x="86" y="112" width="14" height="10" rx="1.5" fill="#F59E0B" stroke="#0B2545" stroke-width="0.8" />
+    <rect x="102" y="112" width="16" height="10" rx="1.5" fill="#00B4D8" stroke="#0B2545" stroke-width="0.8" />
+    <rect x="122" y="112" width="16" height="10" rx="1.5" fill="#EF4444" stroke="#0B2545" stroke-width="0.8" />
+    <rect x="140" y="112" width="14" height="10" rx="1.5" fill="#10B981" stroke="#0B2545" stroke-width="0.8" />
+
+    <!-- Upper row -->
+    <rect x="94" y="103" width="14" height="9" rx="1.5" fill="#3B82F6" stroke="#0B2545" stroke-width="0.8" />
+    <rect x="132" y="103" width="14" height="9" rx="1.5" fill="#F59E0B" stroke="#0B2545" stroke-width="0.8" />
+  </g>
+
+  <!-- Cargo Vessel Bow & Hull Cutting Ocean -->
+  <path d="M 62 132 L 80 152 L 160 152 L 178 132 L 168 126 L 72 126 Z" fill="url(#hullGrad2)" stroke="#0B2545" stroke-width="1.5" />
+  <path d="M 72 138 L 82 152 L 158 152 L 168 138 Z" fill="#E63946" />
+
+  <!-- Dynamic Slicing Waves -->
+  <path d="M 44 158 C 70 148, 95 158, 120 150 C 145 142, 170 154, 196 156 C 180 166, 150 168, 120 165 C 90 162, 65 168, 44 158 Z" fill="url(#cyanGrad2)" />
+  <path d="M 58 168 C 82 160, 106 170, 130 164 C 154 158, 178 166, 182 168 C 160 178, 135 178, 110 176 C 85 174, 68 176, 58 168 Z" fill="#0077B6" opacity="0.8" />
+
+  <!-- Anchor Motif Ring Base -->
+  <path d="M 104 186 C 114 192, 126 192, 136 186" stroke="url(#goldGrad2)" stroke-width="3" stroke-linecap="round" fill="none" />
+  <circle cx="120" cy="190" r="2.5" fill="url(#goldGrad2)" />
+</svg>
