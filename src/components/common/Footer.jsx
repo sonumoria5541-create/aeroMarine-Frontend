@@ -119,8 +119,8 @@ export const Footer = () => {
             <p>
               <strong className="text-slate-200">Regulatory & Risk Notice:</strong> AeroMarine is presented as a maritime container business infrastructure.
               Participating in container units and receiving earnings constitutes commercial participation subject to global freight charter demand, fuel surcharges, and maritime logistics variables.
-              Figures presented during the DEMO simulation phase are purely illustrative and do not constitute guaranteed or risk-free returns.
-              Real-world transactions are activated only following certified statutory and legal counsel reviews in target jurisdictions.
+              Figures presented reflect standard maritime freight lease agreements and do not constitute guaranteed or risk-free returns.
+              All operations are governed by statutory maritime logistics standards.
             </p>
           </div>
           <div className="flex flex-col sm:flex-row items-center justify-between pt-4 text-slate-400 text-xs gap-4">

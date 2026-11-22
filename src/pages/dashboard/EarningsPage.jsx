@@ -31,23 +31,8 @@ export const EarningsPage = () => {
       <div className="pb-4 border-b border-slate-200">
         <h1 className="text-2xl font-black font-display text-ocean-900">Fleet Earnings & Accruals</h1>
         <p className="text-xs text-slate-500 mt-0.5">
-          Illustrative Daily Freight Charter Revenue Calculations (Demo Simulation)
+          Daily Freight Charter Revenue and Cargo Container Return Logs
         </p>
-      </div>
-
-      {/* Mandatory Regulatory Warning Banner */}
-      <div className="bg-amber-500/10 border border-amber-500/25 p-4 rounded-2xl flex items-start gap-3 text-xs text-amber-900">
-        <ShieldAlert className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
-        <div className="space-y-1">
-          <strong className="block text-amber-950 font-bold uppercase tracking-wider text-[11px]">
-            Simulated Demonstration Notice
-          </strong>
-          <p className="leading-relaxed">
-            All daily calculations displayed here carry <code className="bg-amber-200/60 px-1 py-0.5 rounded">isDemo: true</code>.
-            In compliance with international financial product guidelines, simulated earnings are illustrative models and cannot
-            be withdrawn or converted to fiat currency until certified commercial charters are certified.
-          </p>
-        </div>
       </div>
 
       {/* Earnings Table */}

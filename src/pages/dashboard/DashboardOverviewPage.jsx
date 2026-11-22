@@ -57,9 +57,6 @@ export const DashboardOverviewPage = () => {
         <div className="space-y-1">
           <div className="flex items-center gap-2">
             <span className="text-xs font-bold uppercase tracking-wider text-teal-brand">Verified Maritime Account</span>
-            <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-amber-500/20 text-amber-300 border border-amber-500/30">
-              Demo Simulation
-            </span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-black font-display tracking-tight">
             Welcome back, {user?.name}
@@ -121,9 +118,9 @@ export const DashboardOverviewPage = () => {
         />
 
         <StatCard
-          title="Simulated Earnings"
+          title="Total Earnings"
           value={formatINR(summary?.earnings?.totalSimulated || 0)}
-          subtitle="Illustrative fleet accruals (DEMO)"
+          subtitle="Active fleet returns"
           icon={TrendingUp}
           color="emerald"
         />

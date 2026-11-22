@@ -5,8 +5,8 @@ import { useAuth } from '../../context/AuthContext';
 import { AeroMarineLogo } from '../../components/common/AeroMarineLogo';
 
 export const LoginPage = () => {
-  const [phone, setPhone] = useState('7009962845');
-  const [password, setPassword] = useState('yadav123');
+  const [phone, setPhone] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
