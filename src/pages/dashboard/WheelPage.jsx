@@ -4,24 +4,23 @@ import { Sparkles, Award, ArrowRight, CheckCircle2, AlertCircle } from 'lucide-r
 import api from '../../lib/api';
 import { useAuth } from '../../context/AuthContext';
 
-const PRIZES = [200, 250, 300, 350, 400, 250, 300, 200];
-const SEGMENT_COLORS = [
-  '#0B2545',
-  '#0077B6',
-  '#00B4D8',
-  '#0B2545',
-  '#F59E0B',
-  '#0077B6',
-  '#00B4D8',
-  '#134074',
+const SEGMENTS = [
+  { index: 0, label: 'Better Luck', fullLabel: 'Better Luck Next Time', amount: 0, color: '#334155' },
+  { index: 1, label: '₹10', fullLabel: '₹10 Cash Reward', amount: 10, color: '#0077B6' },
+  { index: 2, label: '₹50', fullLabel: '₹50 Cash Reward', amount: 50, color: '#00B4D8' },
+  { index: 3, label: '₹20', fullLabel: '₹20 Cash Reward', amount: 20, color: '#134074' },
+  { index: 4, label: '₹100', fullLabel: '₹100 Cash Reward', amount: 100, color: '#0B2545' },
+  { index: 5, label: '₹500', fullLabel: '₹500 Cash Reward', amount: 500, color: '#F59E0B' },
+  { index: 6, label: '₹1000', fullLabel: '₹1,000 Grand Reward', amount: 1000, color: '#10B981' },
+  { index: 7, label: 'Better Luck', fullLabel: 'Better Luck Next Time', amount: 0, color: '#475569' },
 ];
 
 export const WheelPage = () => {
   const { user, refreshUser } = useAuth();
   const [spinning, setSpinning] = useState(false);
   const [rotation, setRotation] = useState(0);
-  const [spinsLeft, setSpinsLeft] = useState(user?.spinsLeft ?? 1);
-  const [wonPrize, setWonPrize] = useState(null);
+  const [spinsLeft, setSpinsLeft] = useState(user?.spinsLeft ?? 0);
+  const [spinResult, setSpinResult] = useState(null);
   const [errorMsg, setErrorMsg] = useState('');
 
   const handleSpin = async () => {
@@ -32,24 +31,35 @@ export const WheelPage = () => {
     }
 
     setErrorMsg('');
-    setWonPrize(null);
+    setSpinResult(null);
     setSpinning(true);
 
     try {
       const res = await api.post('/task/spin');
       if (res.data?.status === 'success') {
-        const { targetIndex, prize, spinsLeft: remaining } = res.data;
+        const { targetIndex, prize, spinsLeft: remaining, message } = res.data;
 
-        // Calculate rotation degrees: 360 * 5 full spins + target segment offset
-        const segmentAngle = 360 / PRIZES.length;
-        // Invert to align pointer at top (270 deg or 0 deg depending on layout)
-        const targetAngle = 360 * 6 + (PRIZES.length - 1 - targetIndex) * segmentAngle + segmentAngle / 2;
+        // Calculate rotation degrees:
+        // Each segment is 360 / 8 = 45 degrees
+        // Pointer is at the top (0 degrees).
+        // Align segment targetIndex under the top pointer
+        const segmentAngle = 360 / SEGMENTS.length;
+        const targetAngleOffset = ((SEGMENTS.length - targetIndex) % SEGMENTS.length) * segmentAngle;
 
-        setRotation((prev) => prev + targetAngle);
+        // Ensure at least 6 full clockwise rotations
+        const currentMod = rotation % 360;
+        const delta = 360 * 6 + ((360 - currentMod + targetAngleOffset) % 360);
+
+        setRotation((prev) => prev + delta);
 
         setTimeout(() => {
           setSpinning(false);
-          setWonPrize(prize);
+          setSpinResult({
+            prize,
+            label: SEGMENTS[targetIndex]?.fullLabel || (prize > 0 ? `₹${prize}` : 'Better Luck Next Time'),
+            isWin: prize > 0,
+            message,
+          });
           setSpinsLeft(remaining);
           refreshUser();
         }, 3500);
@@ -73,14 +83,13 @@ export const WheelPage = () => {
         </div>
         <h1 className="text-xl font-black tracking-tight">Lucky Maritime Spin</h1>
         <p className="text-xs text-blue-100/80 mt-1 max-w-xs mx-auto">
-          Spin once daily and win up to ₹400 instant cash directly into your wallet.
+          Spin daily and win up to ₹1,000 instant cash directly into your wallet.
         </p>
       </div>
 
       {/* Wheel Card */}
       <div className="px-4 -mt-10">
         <div className="bg-white rounded-[32px] p-6 shadow-[0_16px_36px_-12px_rgba(11,37,69,0.15)] border border-slate-100 flex flex-col items-center">
-          
           {/* Wheel Pointer */}
           <div className="relative mb-2">
             <div className="w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-t-[18px] border-t-amber-500 z-20 drop-shadow-md"></div>
@@ -88,14 +97,13 @@ export const WheelPage = () => {
 
           {/* Interactive Spin Wheel Circle */}
           <div className="relative w-64 h-64 rounded-full p-2 bg-gradient-to-tr from-[#0B2545] via-[#0077B6] to-[#00B4D8] shadow-2xl ring-4 ring-cyan-100 flex items-center justify-center">
-            
             {/* Rotating Wheel Body */}
             <div
               className="w-full h-full rounded-full relative overflow-hidden transition-transform duration-[3500ms] cubic-bezier(0.17, 0.67, 0.12, 0.99)"
               style={{ transform: `rotate(${rotation}deg)` }}
             >
-              {PRIZES.map((prize, idx) => {
-                const angle = (360 / PRIZES.length) * idx;
+              {SEGMENTS.map((segment, idx) => {
+                const angle = (360 / SEGMENTS.length) * idx;
                 return (
                   <div
                     key={idx}
@@ -106,12 +114,16 @@ export const WheelPage = () => {
                     }}
                   >
                     <div
-                      className="text-xs font-black px-2 py-0.5 rounded-full shadow-sm text-white"
+                      className={`font-black rounded-full shadow-sm text-white flex items-center justify-center ${
+                        segment.amount === 0
+                          ? 'text-[8.5px] px-2 py-0.5 tracking-tight'
+                          : 'text-xs px-2.5 py-0.5'
+                      }`}
                       style={{
-                        backgroundColor: SEGMENT_COLORS[idx % SEGMENT_COLORS.length],
+                        backgroundColor: segment.color,
                       }}
                     >
-                      ₹{prize}
+                      {segment.label}
                     </div>
                   </div>
                 );
@@ -126,7 +138,7 @@ export const WheelPage = () => {
             <button
               onClick={handleSpin}
               disabled={spinning}
-              className="absolute z-20 w-16 h-16 rounded-full bg-gradient-to-tr from-amber-500 to-amber-400 text-white font-black text-xs uppercase tracking-tighter shadow-xl border-4 border-white flex flex-col items-center justify-center active:scale-95 transition-transform disabled:opacity-80"
+              className="absolute z-20 w-16 h-16 rounded-full bg-gradient-to-tr from-amber-500 to-amber-400 text-white font-black text-xs uppercase tracking-tighter shadow-xl border-4 border-white flex flex-col items-center justify-center active:scale-95 transition-transform disabled:opacity-80 cursor-pointer"
             >
               <span>SPIN</span>
               <span className="text-[9px] -mt-0.5 text-amber-100">GO</span>
@@ -147,11 +159,34 @@ export const WheelPage = () => {
             </div>
           )}
 
-          {/* Win Reward Modal / Toast */}
-          {wonPrize && (
-            <div className="mt-4 p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-center w-full animate-in zoom-in-95">
-              <div className="text-sm font-black text-emerald-700">Congratulations!</div>
-              <div className="text-xs mt-0.5">You won ₹{wonPrize} cash reward added to your wallet!</div>
+          {/* Win or Better Luck Notification */}
+          {spinResult && (
+            <div
+              className={`mt-4 p-4 rounded-2xl text-center w-full animate-in zoom-in-95 border ${
+                spinResult.isWin
+                  ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
+                  : 'bg-amber-50 border-amber-200 text-amber-800'
+              }`}
+            >
+              <div
+                className={`text-sm font-black flex items-center justify-center gap-1.5 ${
+                  spinResult.isWin ? 'text-emerald-700' : 'text-amber-700'
+                }`}
+              >
+                {spinResult.isWin ? (
+                  <>
+                    <CheckCircle2 size={16} className="text-emerald-600" />
+                    <span>Congratulations!</span>
+                  </>
+                ) : (
+                  <span>Better Luck Next Time!</span>
+                )}
+              </div>
+              <div className="text-xs mt-0.5 font-medium">
+                {spinResult.isWin
+                  ? `You won ₹${spinResult.prize} cash reward added to your wallet balance!`
+                  : 'No reward this turn. Lease an active container plan on the Home page to unlock more free daily spins!'}
+              </div>
             </div>
           )}
 
@@ -161,7 +196,7 @@ export const WheelPage = () => {
             disabled={spinning || spinsLeft <= 0}
             className={`w-full mt-5 py-3.5 rounded-2xl font-bold text-xs uppercase tracking-wider shadow-lg transition-all ${
               spinsLeft > 0
-                ? 'bg-gradient-to-r from-[#0B2545] to-[#0077B6] text-white shadow-blue-900/30 active:scale-95'
+                ? 'bg-gradient-to-r from-[#0B2545] to-[#0077B6] text-white shadow-blue-900/30 active:scale-95 cursor-pointer'
                 : 'bg-slate-200 text-slate-400 cursor-not-allowed shadow-none'
             }`}
           >
@@ -182,7 +217,7 @@ export const WheelPage = () => {
             <span>How it works</span>
           </h2>
           <p className="text-xs text-slate-500">
-            Spin daily and win up to ₹400 instant cash reward:
+            Spin daily and win up to ₹1,000 instant cash reward:
           </p>
 
           <div className="space-y-2.5 pt-1 text-xs">
