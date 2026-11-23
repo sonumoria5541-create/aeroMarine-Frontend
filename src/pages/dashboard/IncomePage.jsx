@@ -54,48 +54,51 @@ export const IncomePage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F4F8FC] pb-6">
-      {/* Curved Navy Header */}
-      <div className="relative bg-gradient-to-b from-[#0B2545] to-[#134074] px-5 pt-6 pb-14 text-white rounded-b-[36px] shadow-lg shadow-blue-950/20">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2.5">
-            <AeroMarineLogo size={32} variant="icon" />
-            <h1 className="text-lg font-black tracking-tight">My Fleet Orders</h1>
+    <div className="min-h-screen bg-[#F4F8FC] pb-28">
+      {/* Curved Navy Header with Responsive Spacing */}
+      <div className="relative bg-gradient-to-b from-[#0B2545] to-[#134074] px-4 sm:px-5 pt-5 pb-6 text-white rounded-b-[32px] shadow-lg shadow-blue-950/20">
+        {/* Header Top Row: Logo, Title & Countdown */}
+        <div className="flex flex-wrap items-center justify-between gap-2.5 mb-4">
+          <div className="flex items-center gap-2 min-w-0">
+            <AeroMarineLogo size={28} variant="icon" />
+            <h1 className="text-base sm:text-lg font-black tracking-tight text-white truncate">
+              My Fleet Orders
+            </h1>
           </div>
 
-          {/* Income Countdown Timer */}
-          <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-400/20 border border-cyan-300/30 text-cyan-200 text-xs font-mono font-bold shadow-inner">
-            <Clock size={13} className="animate-spin text-cyan-300" style={{ animationDuration: '6s' }} />
+          {/* Income Countdown Timer Badge */}
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-cyan-400/20 border border-cyan-300/30 text-cyan-200 text-[11px] font-mono font-bold shadow-inner flex-shrink-0">
+            <Clock size={12} className="animate-spin text-cyan-300" style={{ animationDuration: '6s' }} />
             <span>Income Time {stats.incomeTimer || '09:42:39'}</span>
           </div>
         </div>
 
-        {/* 3 Summary Stats */}
-        <div className="grid grid-cols-3 gap-2 pt-2 text-center">
-          <div className="p-3 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/10">
-            <div className="text-[10px] text-blue-200">Total Invested</div>
-            <div className="text-base font-black text-white mt-0.5">₹{stats.totalInvested}</div>
+        {/* 3 Summary Stats Cards */}
+        <div className="grid grid-cols-3 gap-2 text-center">
+          <div className="p-2.5 sm:p-3 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/10 min-w-0">
+            <div className="text-[10px] sm:text-[11px] text-blue-200 font-medium truncate">Total Invested</div>
+            <div className="text-sm sm:text-base font-black text-white mt-0.5 truncate">₹{stats.totalInvested}</div>
           </div>
-          <div className="p-3 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/10">
-            <div className="text-[10px] text-cyan-200">Daily Income</div>
-            <div className="text-base font-black text-cyan-300 mt-0.5">₹{stats.dailyIncome}</div>
+          <div className="p-2.5 sm:p-3 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/10 min-w-0">
+            <div className="text-[10px] sm:text-[11px] text-cyan-200 font-medium truncate">Daily Income</div>
+            <div className="text-sm sm:text-base font-black text-cyan-300 mt-0.5 truncate">₹{stats.dailyIncome}</div>
           </div>
-          <div className="p-3 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/10">
-            <div className="text-[10px] text-blue-200">Active Plans</div>
-            <div className="text-base font-black text-white mt-0.5">{stats.activePlans}</div>
+          <div className="p-2.5 sm:p-3 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/10 min-w-0">
+            <div className="text-[10px] sm:text-[11px] text-blue-200 font-medium truncate">Active Plans</div>
+            <div className="text-sm sm:text-base font-black text-white mt-0.5 truncate">{stats.activePlans}</div>
           </div>
         </div>
       </div>
 
-      {/* Floating Claim Button / Status */}
-      <div className="px-4 -mt-6">
-        <div className="bg-white p-3 rounded-2xl shadow-md border border-slate-100 flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
+      {/* Daily Settlements Action Card (No negative margin collision) */}
+      <div className="px-4 mt-3 sm:mt-4">
+        <div className="bg-white p-3.5 rounded-2xl shadow-sm border border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="w-9 h-9 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center flex-shrink-0">
               <Zap size={20} />
             </div>
-            <div>
-              <div className="text-xs font-bold text-slate-800">Automated Daily Settlements</div>
+            <div className="min-w-0">
+              <div className="text-xs font-bold text-slate-800 truncate">Automated Daily Settlements</div>
               <div className="text-[10px] text-slate-400">Earnings automatically arrive every 24h</div>
             </div>
           </div>
@@ -103,7 +106,7 @@ export const IncomePage = () => {
           <button
             onClick={handleClaim}
             disabled={claiming || stats.activePlans === 0}
-            className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-[#0077B6] to-[#00B4D8] text-white text-xs font-bold shadow-md shadow-cyan-900/20 active:scale-95 disabled:opacity-50 transition-all flex items-center gap-1.5"
+            className="w-full sm:w-auto px-4 py-2 rounded-xl bg-gradient-to-r from-[#0077B6] to-[#00B4D8] text-white text-xs font-bold shadow-md shadow-cyan-900/15 active:scale-95 disabled:opacity-50 transition-all flex items-center justify-center gap-1.5 flex-shrink-0 cursor-pointer"
           >
             {claiming ? (
               <RefreshCw size={13} className="animate-spin" />
@@ -145,7 +148,7 @@ export const IncomePage = () => {
             </p>
             <Link
               to="/"
-              className="mt-4 inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#0B2545] to-[#0077B6] text-white text-xs font-bold shadow-md shadow-blue-900/20 active:scale-95 transition-all"
+              className="mt-4 inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#0B2545] to-[#0077B6] text-white text-xs font-bold shadow-md shadow-blue-900/20 active:scale-95 transition-all cursor-pointer"
             >
               <span>Explore plans</span>
               <ArrowRight size={14} />
@@ -159,20 +162,20 @@ export const IncomePage = () => {
             >
               <ShipVisualCard
                 planName={order.planName}
-                height="h-28"
+                height="h-36"
                 showSpecs={true}
                 className="mb-2"
               />
 
-              <div className="flex items-start justify-between">
-                <div>
-                  <h4 className="font-extrabold text-sm text-slate-900">{order.planName}</h4>
+              <div className="flex items-start justify-between gap-2">
+                <div className="min-w-0">
+                  <h4 className="font-extrabold text-sm text-slate-900 truncate">{order.planName}</h4>
                   <p className="text-[10px] text-slate-400 mt-0.5">
                     Leased on: {new Date(order.createdAt).toLocaleDateString()}
                   </p>
                 </div>
                 <span
-                  className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                  className={`text-[10px] font-bold px-2 py-0.5 rounded-full flex-shrink-0 ${
                     order.status === 'running'
                       ? 'bg-emerald-50 text-emerald-600 border border-emerald-200/50'
                       : 'bg-slate-100 text-slate-500'
@@ -183,17 +186,17 @@ export const IncomePage = () => {
               </div>
 
               <div className="grid grid-cols-3 gap-2 bg-slate-50 p-2.5 rounded-xl text-center text-xs">
-                <div>
-                  <div className="text-[10px] text-slate-400">Lease Price</div>
-                  <div className="font-bold text-slate-800 mt-0.5">₹{order.price}</div>
+                <div className="min-w-0">
+                  <div className="text-[10px] text-slate-400 truncate">Lease Price</div>
+                  <div className="font-bold text-slate-800 mt-0.5 truncate">₹{order.price}</div>
                 </div>
-                <div>
-                  <div className="text-[10px] text-[#0077B6]">Daily Yield</div>
-                  <div className="font-bold text-[#0077B6] mt-0.5">₹{order.dailyIncome}</div>
+                <div className="min-w-0">
+                  <div className="text-[10px] text-[#0077B6] truncate">Daily Yield</div>
+                  <div className="font-bold text-[#0077B6] mt-0.5 truncate">₹{order.dailyIncome}</div>
                 </div>
-                <div>
-                  <div className="text-[10px] text-slate-400">Days Left</div>
-                  <div className="font-bold text-slate-800 mt-0.5">{order.daysRemaining} Days</div>
+                <div className="min-w-0">
+                  <div className="text-[10px] text-slate-400 truncate">Days Left</div>
+                  <div className="font-bold text-slate-800 mt-0.5 truncate">{order.daysRemaining} Days</div>
                 </div>
               </div>
 
