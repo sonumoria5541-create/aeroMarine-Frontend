@@ -18,6 +18,7 @@ import {
   Sparkles,
   ChevronRight,
   Info,
+  Download,
 } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import { useAuth } from '../../context/AuthContext';
@@ -25,28 +26,33 @@ import api, { getApiErrorMessage } from '../../lib/api';
 
 const PRESET_AMOUNTS = [285, 520, 720, 1000, 2000, 4785];
 
+const OFFICIAL_RECHARGE_QR_URL =
+  'https://res.cloudinary.com/uk36yvrq/image/upload/v1795418834/WhatsApp_Image_2026-11-23_at_12.56.05_PM.jpg';
+
 const CHANNELS = [
   {
     id: 'channel_1',
-    name: 'Channel 1 (VIP Fast UPI)',
+    name: 'Channel 1 (VIP Fast UPI / GPay)',
     code: 'VIP-01',
-    upiId: 'aeromarine.fastpay@okhdfcbank',
-    payeeName: 'AeroMarine VIP Pay',
-    tag: '⚡ Instant Auto-Match',
+    upiId: 'ajeetkumar7009.r@okaxis',
+    payeeName: 'Ajeet Kumar',
+    tag: '⚡ Official GPay QR',
     badgeColor: 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20',
-    description: 'Direct VIP route for PhonePe, GPay, Paytm, BHIM & All UPI Apps',
+    description: 'Official direct merchant QR • Google Pay, PhonePe, Paytm, BHIM',
     speed: '< 2 mins',
+    qrImage: OFFICIAL_RECHARGE_QR_URL,
   },
   {
     id: 'channel_2',
     name: 'Channel 2 (Priority Express UPI)',
     code: 'EXP-02',
-    upiId: 'aeromarine.express@icici',
-    payeeName: 'AeroMarine Express Pay',
-    tag: '🛡️ Priority Route',
+    upiId: 'ajeetkumar7009.r@okaxis',
+    payeeName: 'Ajeet Kumar',
+    tag: '🛡️ Priority Channel',
     badgeColor: 'bg-blue-500/10 text-blue-600 border-blue-500/20',
-    description: 'High-availability dedicated banking channel via ICICI merchant route',
+    description: 'Direct high-limit settlement route • All UPI apps supported',
     speed: '< 3 mins',
+    qrImage: OFFICIAL_RECHARGE_QR_URL,
   },
 ];
 
@@ -88,7 +94,7 @@ export const RechargePage = () => {
 
   const upiIntentUrl = `upi://pay?pa=${selectedChannel.upiId}&pn=${encodeURIComponent(
     selectedChannel.payeeName
-  )}&am=${amount || 0}&cu=INR&tn=AeroMarine-Deposit`;
+  )}&am=${amount || 0}&cu=INR&aid=uGICAgJDIw-vKbQ&tn=AeroMarine-Deposit`;
 
   const showToast = (msg, type = 'success') => {
     setToastMsg(msg);
@@ -511,16 +517,24 @@ export const RechargePage = () => {
                 <span className="text-[11px] text-slate-400 font-medium">Valid for 15 mins</span>
               </div>
 
-              {/* Scannable Real Dynamic QR Code */}
+              {/* Official Scannable Recharge QR Code */}
               <div className="flex flex-col items-center justify-center py-2">
-                <div className="p-3 bg-white rounded-2xl border-2 border-dashed border-[#0077B6]/40 shadow-inner inline-block">
-                  <QRCodeSVG
-                    value={upiIntentUrl}
-                    size={180}
-                    level="H"
-                    includeMargin={false}
-                    className="rounded-lg"
-                  />
+                <div className="p-2.5 bg-white rounded-2xl border-2 border-dashed border-[#0077B6]/40 shadow-md inline-block max-w-[210px]">
+                  {selectedChannel.qrImage ? (
+                    <img
+                      src={selectedChannel.qrImage}
+                      alt="Official Recharge QR Code"
+                      className="w-48 h-48 object-contain rounded-xl mx-auto shadow-sm"
+                    />
+                  ) : (
+                    <QRCodeSVG
+                      value={upiIntentUrl}
+                      size={180}
+                      level="H"
+                      includeMargin={false}
+                      className="rounded-lg"
+                    />
+                  )}
                 </div>
                 <p className="text-xs font-bold text-slate-800 mt-3">
                   Scan QR with any UPI App
@@ -528,6 +542,18 @@ export const RechargePage = () => {
                 <p className="text-[11px] text-slate-500 mt-0.5">
                   Google Pay &bull; PhonePe &bull; Paytm &bull; BHIM &bull; Cred
                 </p>
+                <div className="pt-2">
+                  <a
+                    href={selectedChannel.qrImage || upiIntentUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    download="AeroMarine_Recharge_QR.jpg"
+                    className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-[11px] font-bold inline-flex items-center gap-1.5 transition-colors cursor-pointer"
+                  >
+                    <Download size={13} className="text-[#0077B6]" />
+                    <span>Save QR to Gallery</span>
+                  </a>
+                </div>
               </div>
 
               {/* Mobile Direct Pay UPI Intent Link */}
