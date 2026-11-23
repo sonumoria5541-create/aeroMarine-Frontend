@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate, useOutletContext } from 'react-router-dom';
 import {
   Ship,
@@ -12,7 +12,6 @@ import {
   CheckCircle2,
   X,
   Sparkles,
-  Download,
   ShieldCheck,
   ChevronRight,
 } from 'lucide-react';
@@ -44,23 +43,24 @@ export const HomePage = () => {
     }
   }, []);
 
-  // Fetch plans
-  useEffect(() => {
-    const fetchPlans = async () => {
-      try {
-        setLoading(true);
-        const res = await api.get(`/plans?category=${activeTab}`);
-        if (res.data?.status === 'success') {
-          setPlans(res.data.data);
-        }
-      } catch (err) {
-        console.error('Error fetching plans:', err);
-      } finally {
-        setLoading(false);
+  // Fetch plans (attaches user's purchased quota count when authenticated)
+  const fetchPlans = useCallback(async () => {
+    try {
+      setLoading(true);
+      const res = await api.get(`/plans?category=${activeTab}`);
+      if (res.data?.status === 'success') {
+        setPlans(res.data.data);
       }
-    };
-    fetchPlans();
+    } catch (err) {
+      console.error('Error fetching plans:', err);
+    } finally {
+      setLoading(false);
+    }
   }, [activeTab]);
+
+  useEffect(() => {
+    fetchPlans();
+  }, [fetchPlans, user]);
 
   const showToast = (msg, type = 'success') => {
     setToastMsg(msg);
@@ -83,8 +83,17 @@ export const HomePage = () => {
       const res = await api.post('/plans/buy', { planId: selectedPlan._id });
       if (res.data?.status === 'success') {
         showToast(res.data.message || 'Lease activated successfully!', 'success');
+        const updatedCount = res.data?.purchasedCount ?? ((selectedPlan.purchasedCount || 0) + 1);
+        setPlans((prev) =>
+          prev.map((p) =>
+            p._id === selectedPlan._id
+              ? { ...p, purchasedCount: updatedCount }
+              : p
+          )
+        );
         setSelectedPlan(null);
         await refreshUser();
+        fetchPlans();
       } else {
         showToast(res.data?.message || 'Failed to lease plan', 'error');
       }
@@ -114,17 +123,6 @@ export const HomePage = () => {
         <AeroMarineLogo size={36} variant="horizontal" theme="dark" />
 
         <div className="flex items-center gap-2">
-          {/* APK download pill */}
-          <a
-            href="https://www.mediafire.com"
-            target="_blank"
-            rel="noreferrer"
-            className="flex items-center gap-1 px-2.5 py-1 rounded-xl bg-white/10 hover:bg-white/20 text-[11px] font-semibold border border-white/10 transition-colors"
-          >
-            <Download size={13} className="text-cyan-300" />
-            <span>App</span>
-          </a>
-
           {/* Customer support trigger */}
           <button
             onClick={() => outletContext?.openSupport()}
@@ -286,8 +284,16 @@ export const HomePage = () => {
                   </div>
                 </div>
 
-                <span className="text-[10px] font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200/50 shrink-0">
-                  Limit 0/{plan.limitPerUser || 10}
+                <span
+                  className={`text-[10px] font-bold px-2 py-0.5 rounded-full border shrink-0 ${
+                    (plan.purchasedCount || 0) >= (plan.limitPerUser || 10)
+                      ? 'text-rose-600 bg-rose-50 border-rose-200/60'
+                      : (plan.purchasedCount || 0) > 0
+                      ? 'text-emerald-700 bg-emerald-50 border-emerald-200/60'
+                      : 'text-amber-600 bg-amber-50 border-amber-200/50'
+                  }`}
+                >
+                  Limit {plan.purchasedCount || 0}/{plan.limitPerUser || 10}
                 </span>
               </div>
 
@@ -329,9 +335,14 @@ export const HomePage = () => {
                 <button
                   type="button"
                   onClick={() => handleBuyClick(plan)}
-                  className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#0B2545] to-[#0077B6] hover:from-[#134074] hover:to-[#0096C7] text-white text-xs font-bold shadow-md shadow-blue-900/20 active:scale-95 transition-all"
+                  disabled={(plan.purchasedCount || 0) >= (plan.limitPerUser || 10)}
+                  className={`px-5 py-2.5 rounded-xl text-xs font-bold shadow-md transition-all ${
+                    (plan.purchasedCount || 0) >= (plan.limitPerUser || 10)
+                      ? 'bg-slate-200 text-slate-400 cursor-not-allowed shadow-none'
+                      : 'bg-gradient-to-r from-[#0B2545] to-[#0077B6] hover:from-[#134074] hover:to-[#0096C7] text-white shadow-blue-900/20 active:scale-95 cursor-pointer'
+                  }`}
                 >
-                  Buy Now
+                  {(plan.purchasedCount || 0) >= (plan.limitPerUser || 10) ? 'Limit Reached' : 'Buy Now'}
                 </button>
               </div>
             </div>
@@ -370,6 +381,10 @@ export const HomePage = () => {
               <div className="flex justify-between text-slate-600">
                 <span>Contract Duration:</span>
                 <span className="font-bold text-slate-800">{selectedPlan.durationDays} Days</span>
+              </div>
+              <div className="flex justify-between text-slate-600">
+                <span>Current Holdings:</span>
+                <span className="font-bold text-slate-800">{selectedPlan.purchasedCount || 0} / {selectedPlan.limitPerUser || 10} units</span>
               </div>
               <div className="flex justify-between text-slate-600 pt-2 border-t border-slate-200 font-semibold">
                 <span>Total Expected Return:</span>

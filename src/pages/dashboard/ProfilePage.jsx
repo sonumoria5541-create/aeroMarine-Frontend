@@ -4,7 +4,6 @@ import {
   Settings,
   Wallet,
   ArrowUpRight,
-  Download,
   CreditCard,
   User,
   Shield,
@@ -123,9 +122,9 @@ export const ProfilePage = () => {
         </div>
       </div>
 
-      {/* 4 Quick Action Buttons */}
+      {/* 3 Quick Action Buttons */}
       <div className="px-4 -mt-6">
-        <div className="bg-white p-3.5 rounded-2xl shadow-md border border-slate-100 grid grid-cols-4 gap-2 text-center">
+        <div className="bg-white p-3.5 rounded-2xl shadow-md border border-slate-100 grid grid-cols-3 gap-3 text-center">
           {/* Recharge */}
           <Link to="/recharge" className="flex flex-col items-center group">
             <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-[#0B2545] to-[#0077B6] text-white flex items-center justify-center shadow-md group-active:scale-95 transition-transform">
@@ -141,19 +140,6 @@ export const ProfilePage = () => {
             </div>
             <span className="text-[11px] font-bold text-slate-700 mt-1.5">Withdraw</span>
           </Link>
-
-          {/* APK */}
-          <a
-            href="https://www.mediafire.com"
-            target="_blank"
-            rel="noreferrer"
-            className="flex flex-col items-center group"
-          >
-            <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-amber-500 to-amber-400 text-white flex items-center justify-center shadow-md group-active:scale-95 transition-transform">
-              <Download size={20} className="text-white" />
-            </div>
-            <span className="text-[11px] font-bold text-slate-700 mt-1.5">App APK</span>
-          </a>
 
           {/* Bank Card */}
           <Link to="/bank" className="flex flex-col items-center group">
