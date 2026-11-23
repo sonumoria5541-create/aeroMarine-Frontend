@@ -14,6 +14,7 @@ import {
   Sparkles,
   ShieldCheck,
   ChevronRight,
+  AlertCircle,
 } from 'lucide-react';
 import api from '../../lib/api';
 import { useAuth } from '../../context/AuthContext';
@@ -21,7 +22,7 @@ import { AeroMarineLogo } from '../../components/common/AeroMarineLogo';
 import { ShipVisualCard } from '../../components/common/ShipVisualCard';
 
 export const HomePage = () => {
-  const { user, refreshUser } = useAuth();
+  const { user, wallet, refreshUser } = useAuth();
   const navigate = useNavigate();
   const outletContext = useOutletContext();
 
@@ -33,6 +34,9 @@ export const HomePage = () => {
   const [buying, setBuying] = useState(false);
   const [toastMsg, setToastMsg] = useState('');
   const [toastType, setToastType] = useState('success');
+  const [modalError, setModalError] = useState('');
+
+  const totalBalance = (wallet?.availableBalance || 0) + (wallet?.rechargeBalance || 0);
 
   // Check if announcement modal was shown in this session
   useEffect(() => {
@@ -73,12 +77,19 @@ export const HomePage = () => {
       navigate('/login');
       return;
     }
+    setModalError('');
     setSelectedPlan(plan);
   };
 
   const handleConfirmBuy = async () => {
     if (!selectedPlan) return;
+    const currentBal = (wallet?.availableBalance || 0) + (wallet?.rechargeBalance || 0);
+    if (currentBal < selectedPlan.price) {
+      setModalError(`Insufficient wallet balance. Required: ₹${selectedPlan.price}, Available: ₹${currentBal}. Please recharge first.`);
+      return;
+    }
     setBuying(true);
+    setModalError('');
     try {
       const res = await api.post('/plans/buy', { planId: selectedPlan._id });
       if (res.data?.status === 'success') {
@@ -95,10 +106,11 @@ export const HomePage = () => {
         await refreshUser();
         fetchPlans();
       } else {
-        showToast(res.data?.message || 'Failed to lease plan', 'error');
+        setModalError(res.data?.message || 'Failed to lease plan');
       }
     } catch (err) {
-      showToast(err.response?.data?.message || err.message || 'Error processing lease', 'error');
+      const msg = err.response?.data?.message || err.message || 'Error processing lease';
+      setModalError(msg);
     } finally {
       setBuying(false);
     }
@@ -386,32 +398,69 @@ export const HomePage = () => {
                 <span>Current Holdings:</span>
                 <span className="font-bold text-slate-800">{selectedPlan.purchasedCount || 0} / {selectedPlan.limitPerUser || 10} units</span>
               </div>
+              <div className="flex justify-between text-slate-600">
+                <span>Available Wallet:</span>
+                <span className={totalBalance >= selectedPlan.price ? 'font-bold text-emerald-600' : 'font-bold text-rose-600'}>
+                  ₹{totalBalance}
+                </span>
+              </div>
               <div className="flex justify-between text-slate-600 pt-2 border-t border-slate-200 font-semibold">
                 <span>Total Expected Return:</span>
                 <span className="font-black text-emerald-600">₹{selectedPlan.totalRevenue}</span>
               </div>
             </div>
 
+            {/* Error or Insufficient Balance Notification */}
+            {modalError && (
+              <div className="mb-4 p-3 bg-rose-50 border border-rose-200 rounded-2xl text-rose-700 text-xs font-semibold flex items-start gap-2">
+                <AlertCircle size={16} className="shrink-0 mt-0.5 text-rose-600" />
+                <span>{modalError}</span>
+              </div>
+            )}
+
+            {totalBalance < selectedPlan.price && !modalError && (
+              <div className="mb-4 p-3 bg-amber-50 border border-amber-200/70 rounded-2xl text-amber-900 text-xs space-y-1">
+                <div className="font-bold flex items-center gap-1.5 text-amber-800">
+                  <Wallet size={14} className="shrink-0 text-amber-600" />
+                  <span>Insufficient Balance</span>
+                </div>
+                <p className="text-[11px] text-amber-700 leading-tight">
+                  You need ₹{selectedPlan.price - totalBalance} more to lease this fleet container. Please recharge your wallet.
+                </p>
+              </div>
+            )}
+
             <div className="flex gap-2.5">
               <button
                 type="button"
                 onClick={() => setSelectedPlan(null)}
-                className="flex-1 py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-colors"
+                className="flex-1 py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-colors cursor-pointer"
               >
-                No
+                Cancel
               </button>
-              <button
-                type="button"
-                disabled={buying}
-                onClick={handleConfirmBuy}
-                className="flex-1 py-3 rounded-2xl bg-gradient-to-r from-[#0B2545] to-[#0077B6] text-white text-xs font-bold shadow-md shadow-blue-900/20 active:scale-95 transition-all disabled:opacity-70 flex items-center justify-center"
-              >
-                {buying ? (
-                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                ) : (
-                  'Yes, Buy'
-                )}
-              </button>
+
+              {totalBalance < selectedPlan.price ? (
+                <Link
+                  to="/recharge"
+                  className="flex-1 py-3 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white text-xs font-bold shadow-md shadow-amber-900/20 active:scale-95 transition-all text-center flex items-center justify-center gap-1.5 cursor-pointer"
+                >
+                  <Wallet size={14} />
+                  <span>Recharge Now</span>
+                </Link>
+              ) : (
+                <button
+                  type="button"
+                  disabled={buying}
+                  onClick={handleConfirmBuy}
+                  className="flex-1 py-3 rounded-2xl bg-gradient-to-r from-[#0B2545] to-[#0077B6] hover:from-[#134074] hover:to-[#0096C7] text-white text-xs font-bold shadow-md shadow-blue-900/20 active:scale-95 transition-all disabled:opacity-70 flex items-center justify-center cursor-pointer"
+                >
+                  {buying ? (
+                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                  ) : (
+                    'Yes, Buy'
+                  )}
+                </button>
+              )}
             </div>
           </div>
         </div>
