@@ -48,7 +48,7 @@ export const MessagesPage = () => {
             <div>
               <h4 className="font-bold text-slate-900">2. Grow your team, grow income</h4>
               <p className="text-[11px] text-slate-500 mt-0.5">
-                Invite friends and logistics partners with your referral link and earn across three tiers: <strong>L1 10%</strong>, <strong>L2 3%</strong>, and <strong>L3 1%</strong> — credited directly to your available balance.
+                Invite friends and logistics partners with your referral link and earn across three tiers on member recharge: <strong>L1 30%</strong>, <strong>L2 10%</strong>, and <strong>L3 5%</strong> — credited directly to your available balance.
               </p>
             </div>
 

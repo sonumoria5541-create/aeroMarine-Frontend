@@ -47,6 +47,9 @@ export const TeamPage = () => {
         </div>
 
         <div className="text-center my-3">
+          <div className="inline-block px-3 py-0.5 rounded-full bg-cyan-400/20 text-cyan-200 text-[10px] font-extrabold uppercase tracking-wider mb-1.5 border border-cyan-300/30">
+            30% Tier 1 • 10% Tier 2 • 5% Tier 3
+          </div>
           <div className="text-3xl font-black text-cyan-300">
             {teamData?.totalMembers || 0}
           </div>
@@ -70,16 +73,21 @@ export const TeamPage = () => {
         </div>
       </div>
 
-      {/* Grow Your Team Promo Card */}
+      {/* Grow Your Team Promo Banner */}
       <div className="px-4 -mt-6">
-        <div className="bg-white p-4 rounded-2xl shadow-md border border-slate-100 flex items-center justify-between">
+        <div className="bg-white p-4 rounded-2xl shadow-md border border-slate-100 flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center">
-              <Award size={22} />
+            <div className="w-11 h-11 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-black text-xs shrink-0 border border-emerald-100">
+              30%
             </div>
             <div>
-              <div className="text-xs font-bold text-slate-800">Grow your fleet team</div>
-              <div className="text-[10px] text-slate-500">Earn up to 10% on every plan your team leases.</div>
+              <div className="text-xs font-black text-slate-900 flex items-center gap-1.5">
+                <span>Tier-1 30% Recharge Bonus</span>
+                <span className="text-[9px] font-bold bg-amber-100 text-amber-800 px-1.5 py-0.2 rounded-full">3 Tiers</span>
+              </div>
+              <div className="text-[10px] text-slate-500 mt-0.5">
+                Earn 30% (Tier 1), 10% (Tier 2), and 5% (Tier 3) on team recharges.
+              </div>
             </div>
           </div>
 
@@ -101,7 +109,7 @@ export const TeamPage = () => {
           <span className="text-[11px] text-slate-400">Tap to view members</span>
         </div>
 
-        {/* Level 1: 10% */}
+        {/* Level 1: 30% */}
         <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
           <button
             type="button"
@@ -114,9 +122,9 @@ export const TeamPage = () => {
               </div>
               <div>
                 <div className="text-xs font-bold text-slate-900 flex items-center gap-2">
-                  <span>Level 1</span>
+                  <span>Level 1 (Tier 1)</span>
                   <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.2 rounded-full">
-                    10% commission
+                    30% commission
                   </span>
                 </div>
                 <div className="text-[11px] text-slate-500 mt-0.5">
@@ -145,7 +153,7 @@ export const TeamPage = () => {
           )}
         </div>
 
-        {/* Level 2: 3% */}
+        {/* Level 2: 10% */}
         <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
           <button
             type="button"
@@ -158,9 +166,9 @@ export const TeamPage = () => {
               </div>
               <div>
                 <div className="text-xs font-bold text-slate-900 flex items-center gap-2">
-                  <span>Level 2</span>
+                  <span>Level 2 (Tier 2)</span>
                   <span className="text-[10px] font-bold text-cyan-600 bg-cyan-50 px-2 py-0.2 rounded-full">
-                    3% commission
+                    10% commission
                   </span>
                 </div>
                 <div className="text-[11px] text-slate-500 mt-0.5">
@@ -189,7 +197,7 @@ export const TeamPage = () => {
           )}
         </div>
 
-        {/* Level 3: 1% */}
+        {/* Level 3: 5% */}
         <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
           <button
             type="button"
@@ -202,9 +210,9 @@ export const TeamPage = () => {
               </div>
               <div>
                 <div className="text-xs font-bold text-slate-900 flex items-center gap-2">
-                  <span>Level 3</span>
+                  <span>Level 3 (Tier 3)</span>
                   <span className="text-[10px] font-bold text-slate-600 bg-slate-100 px-2 py-0.2 rounded-full">
-                    1% commission
+                    5% commission
                   </span>
                 </div>
                 <div className="text-[11px] text-slate-500 mt-0.5">

@@ -16,11 +16,13 @@ import {
   Clock,
 } from 'lucide-react';
 
+export const FLEET_DEPOSIT_AMOUNTS = [750, 1000, 2000, 3000, 4500, 5500, 6500, 8000, 10000, 15000, 25000, 251000];
+
 export const DepositPage = () => {
   const { wallet, refreshUser } = useAuth();
   const [activeTab, setActiveTab] = useState('deposit'); // 'deposit' | 'history'
 
-  const [amount, setAmount] = useState(5000);
+  const [amount, setAmount] = useState(750);
   const [paymentMethod, setPaymentMethod] = useState('upi');
   const [paymentReference, setPaymentReference] = useState('');
   const [proofFile, setProofFile] = useState(null);
@@ -71,6 +73,17 @@ export const DepositPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const numAmt = Number(amount);
+    if (!numAmt || numAmt < 750) {
+      setErrorNotice('Minimum deposit amount is ₹750.');
+      return;
+    }
+    if (!FLEET_DEPOSIT_AMOUNTS.includes(numAmt)) {
+      setErrorNotice(
+        'Deposit amount must match a fleet container plan (₹750, ₹1000, ₹2000, ₹3000, ₹4500, ₹5500, ₹6500, ₹8000, ₹10000, ₹15000, ₹25000, or ₹251000).'
+      );
+      return;
+    }
     if (!paymentReference.trim()) {
       setErrorNotice('Bank / UPI payment reference (UTR) is required.');
       return;
@@ -230,28 +243,35 @@ export const DepositPage = () => {
           <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-card">
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-ocean-900">Transfer Amount (INR)</label>
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-bold text-ocean-900">Transfer Amount (INR)</label>
+                  <span className="text-[11px] font-bold text-cyan-700">Min ₹750 • Fleet Plans</span>
+                </div>
                 <div className="relative">
                   <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center font-bold text-slate-400">₹</span>
                   <input
                     type="number"
-                    min={100}
-                    step={100}
+                    min={750}
+                    step={50}
                     required
                     value={amount}
                     onChange={(e) => setAmount(Number(e.target.value))}
                     className="w-full pl-8 pr-4 py-3 rounded-xl border border-slate-200 text-base font-bold text-ocean-900 font-display focus:outline-none focus:border-teal-brand"
                   />
                 </div>
-                <div className="flex gap-2 pt-1">
-                  {[2000, 5000, 10000, 25000, 50000].map((amt) => (
+                <div className="flex flex-wrap gap-2 pt-1">
+                  {FLEET_DEPOSIT_AMOUNTS.map((amt) => (
                     <button
                       key={amt}
                       type="button"
                       onClick={() => setAmount(amt)}
-                      className="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700"
+                      className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all ${
+                        amount === amt
+                          ? 'bg-ocean-900 text-white shadow-sm'
+                          : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
+                      }`}
                     >
-                      +{amt / 1000}k
+                      ₹{amt.toLocaleString()}
                     </button>
                   ))}
                 </div>

@@ -29,7 +29,6 @@ export const HomePage = () => {
   const [activeTab, setActiveTab] = useState('regular'); // 'regular' or 'welfare'
   const [plans, setPlans] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [showNoticeModal, setShowNoticeModal] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState(null);
   const [buying, setBuying] = useState(false);
   const [toastMsg, setToastMsg] = useState('');
@@ -37,15 +36,6 @@ export const HomePage = () => {
   const [modalError, setModalError] = useState('');
 
   const totalBalance = (wallet?.availableBalance || 0) + (wallet?.rechargeBalance || 0);
-
-  // Check if announcement modal was shown in this session
-  useEffect(() => {
-    const seen = sessionStorage.getItem('aeromarine_notice_seen');
-    if (!seen) {
-      setShowNoticeModal(true);
-      sessionStorage.setItem('aeromarine_notice_seen', 'true');
-    }
-  }, []);
 
   // Fetch plans (attaches user's purchased quota count when authenticated)
   const fetchPlans = useCallback(async () => {
@@ -462,77 +452,6 @@ export const HomePage = () => {
                 </button>
               )}
             </div>
-          </div>
-        </div>
-      )}
-
-      {/* Pop-up Announcement Modal on Entry */}
-      {showNoticeModal && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in">
-          <div className="w-full max-w-[400px] bg-white rounded-3xl p-6 shadow-2xl relative animate-in zoom-in-95">
-            <button
-              onClick={() => setShowNoticeModal(false)}
-              className="absolute top-4 right-4 p-1.5 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100"
-            >
-              <X size={20} />
-            </button>
-
-            <div className="text-center mb-4">
-              <div className="w-12 h-12 rounded-2xl bg-blue-50 text-[#0077B6] flex items-center justify-center mx-auto mb-2">
-                <Ship size={26} />
-              </div>
-              <h3 className="text-base font-black text-slate-900">
-                Welcome To AeroMarine
-              </h3>
-              <p className="text-[11px] text-slate-500">Official Maritime Shipping Notice</p>
-            </div>
-
-            <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100 space-y-2 text-xs text-slate-600 mb-4">
-              <div className="flex justify-between items-center py-1 border-b border-slate-200/60">
-                <span className="text-slate-500">Min deposit</span>
-                <span className="font-bold text-slate-800">₹250.00</span>
-              </div>
-              <div className="flex justify-between items-center py-1 border-b border-slate-200/60">
-                <span className="text-slate-500">Min withdraw</span>
-                <span className="font-bold text-slate-800">₹120.00</span>
-              </div>
-              <div className="py-1">
-                <div className="text-slate-500 mb-1">Invite commission:</div>
-                <div className="flex justify-between font-bold text-[#0077B6] text-[11px]">
-                  <span>Level 1: 10%</span>
-                  <span>Level 2: 3%</span>
-                  <span>Level 3: 1%</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex gap-2">
-              <button
-                type="button"
-                onClick={() => {
-                  setShowNoticeModal(false);
-                  outletContext?.openSupport();
-                }}
-                className="flex-1 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-colors"
-              >
-                Support
-              </button>
-              <a
-                href="https://t.me/AeroMarine_Official_Channel"
-                target="_blank"
-                rel="noreferrer"
-                className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-[#0B2545] to-[#0077B6] text-white text-xs font-bold text-center shadow-md shadow-blue-900/20"
-              >
-                Channel
-              </a>
-            </div>
-
-            <button
-              onClick={() => setShowNoticeModal(false)}
-              className="w-full mt-3 py-2 text-xs text-slate-400 hover:text-slate-600 font-medium"
-            >
-              Close
-            </button>
           </div>
         </div>
       )}

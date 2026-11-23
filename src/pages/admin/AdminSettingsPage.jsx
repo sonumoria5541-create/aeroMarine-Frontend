@@ -12,7 +12,7 @@ export const AdminSettingsPage = () => {
       branch: 'Port Complex Nariman Point, Mumbai',
     },
     upiId: 'aeromarine.cargo@okhdfcbank',
-    minDeposit: 250,
+    minDeposit: 750,
     maxDeposit: 10000000,
     minWithdrawal: 120,
     maxWithdrawal: 1000000,

@@ -70,7 +70,7 @@ export const SharePage = () => {
         </div>
         <h2 className="text-xl font-black">Build Your Global Maritime Network</h2>
         <p className="text-xs text-blue-100/80 mt-1 max-w-xs mx-auto">
-          Share your referral link and earn daily commissions up to 10% on every fleet contract leased.
+          Share your referral link and earn instant commissions: Tier 1 (30%), Tier 2 (10%), Tier 3 (5%) on every team recharge.
         </p>
       </div>
 
@@ -148,17 +148,17 @@ export const SharePage = () => {
           <div className="grid grid-cols-3 gap-2 text-center pt-1">
             <div className="p-3 rounded-2xl bg-blue-50/70 border border-blue-100/70">
               <div className="text-[10px] font-bold text-slate-400">LV 1</div>
-              <div className="text-lg font-black text-[#0077B6] mt-0.5">10%</div>
+              <div className="text-lg font-black text-[#0077B6] mt-0.5">30%</div>
               <div className="text-[9px] text-slate-500 mt-1">Direct joins</div>
             </div>
             <div className="p-3 rounded-2xl bg-cyan-50/70 border border-cyan-100/70">
               <div className="text-[10px] font-bold text-slate-400">LV 2</div>
-              <div className="text-lg font-black text-cyan-700 mt-0.5">3%</div>
+              <div className="text-lg font-black text-cyan-700 mt-0.5">10%</div>
               <div className="text-[9px] text-slate-500 mt-1">Invited by L1</div>
             </div>
             <div className="p-3 rounded-2xl bg-slate-50 border border-slate-100">
               <div className="text-[10px] font-bold text-slate-400">LV 3</div>
-              <div className="text-lg font-black text-slate-700 mt-0.5">1%</div>
+              <div className="text-lg font-black text-slate-700 mt-0.5">5%</div>
               <div className="text-[9px] text-slate-500 mt-1">Invited by L2</div>
             </div>
           </div>
@@ -186,9 +186,9 @@ export const SharePage = () => {
                 2
               </div>
               <div>
-                <div className="font-bold text-slate-800">They register and lease a plan</div>
+                <div className="font-bold text-slate-800">They register and recharge</div>
                 <div className="text-slate-500 text-[11px] mt-0.5">
-                  Your friend signs up through your link and activates an ocean container lease.
+                  Your friend signs up through your link and recharges their wallet.
                 </div>
               </div>
             </div>
@@ -200,7 +200,7 @@ export const SharePage = () => {
               <div>
                 <div className="font-bold text-slate-800">You earn commission</div>
                 <div className="text-slate-500 text-[11px] mt-0.5">
-                  Your share is credited automatically to your wallet balance across all 3 levels.
+                  Your 30% / 10% / 5% share is credited automatically to your available balance.
                 </div>
               </div>
             </div>

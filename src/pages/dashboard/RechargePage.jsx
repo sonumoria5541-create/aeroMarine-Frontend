@@ -24,7 +24,7 @@ import { QRCodeSVG } from 'qrcode.react';
 import { useAuth } from '../../context/AuthContext';
 import api, { getApiErrorMessage } from '../../lib/api';
 
-const PRESET_AMOUNTS = [285, 520, 720, 1000, 2000, 4785];
+const PRESET_AMOUNTS = [750, 1000, 2000, 3000, 4500, 5500, 6500, 8000, 10000, 15000, 25000, 251000];
 
 const OFFICIAL_RECHARGE_QR_URL =
   'https://res.cloudinary.com/uk36yvrq/image/upload/v1795418834/WhatsApp_Image_2026-11-23_at_12.56.05_PM.jpg';
@@ -68,7 +68,7 @@ export const RechargePage = () => {
   const { wallet, refreshUser } = useAuth();
   const fileInputRef = useRef(null);
 
-  const [amount, setAmount] = useState('720');
+  const [amount, setAmount] = useState('750');
   const [selectedChannelId, setSelectedChannelId] = useState('channel_1');
   const [showPaymentStep, setShowPaymentStep] = useState(false);
 
@@ -116,12 +116,12 @@ export const RechargePage = () => {
 
   const handleContinue = () => {
     const num = Number(amount);
-    if (!num || num < 250) {
-      showToast('Minimum recharge amount is ₹250', 'error');
+    if (!num || num < 750) {
+      showToast('Minimum recharge amount is ₹750', 'error');
       return;
     }
-    if (num > 10000000) {
-      showToast('Maximum single recharge is ₹1,00,00,000', 'error');
+    if (!PRESET_AMOUNTS.includes(num)) {
+      showToast('Please select a valid fleet container plan amount (₹750 to ₹2,51,000)', 'error');
       return;
     }
     setShowPaymentStep(true);
@@ -194,8 +194,13 @@ export const RechargePage = () => {
     e.preventDefault();
 
     const num = Number(amount);
-    if (!num || num < 250) {
-      showToast('Minimum recharge amount is ₹250', 'error');
+    if (!num || num < 750) {
+      showToast('Minimum recharge amount is ₹750', 'error');
+      return;
+    }
+
+    if (!PRESET_AMOUNTS.includes(num)) {
+      showToast('Deposit amount must match a fleet container plan (₹750 to ₹2,51,000)', 'error');
       return;
     }
 
@@ -311,8 +316,8 @@ export const RechargePage = () => {
           <>
             <div className="bg-white rounded-3xl p-5 shadow-lg border border-slate-100 space-y-4">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-extrabold text-slate-800">Enter deposit amount</span>
-                <span className="text-[11px] text-slate-400">Min ₹250</span>
+                <span className="text-xs font-extrabold text-slate-800">Select fleet deposit amount</span>
+                <span className="text-[11px] font-bold text-[#0077B6]">Min ₹750 • Fleet Plans</span>
               </div>
 
               {/* Amount Input with Clear button */}

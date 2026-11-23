@@ -48,7 +48,7 @@ export const AboutPage = () => {
 
           <div className="grid grid-cols-2 gap-2.5 pt-1">
             <div className="p-3.5 rounded-2xl bg-blue-50/70 border border-blue-100/70">
-              <div className="text-xl font-black text-[#0077B6]">10%</div>
+              <div className="text-xl font-black text-[#0077B6]">30%</div>
               <div className="text-xs font-bold text-slate-800 mt-0.5">Level-1 Commission</div>
               <div className="text-[10px] text-slate-500">Instant direct payouts</div>
             </div>
