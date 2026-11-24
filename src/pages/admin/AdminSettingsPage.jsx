@@ -14,7 +14,7 @@ export const AdminSettingsPage = () => {
     upiId: 'aeromarine.cargo@okhdfcbank',
     minDeposit: 750,
     maxDeposit: 10000000,
-    minWithdrawal: 120,
+    minWithdrawal: 200,
     maxWithdrawal: 1000000,
     withdrawalFeePercent: 0,
     maintenanceMode: false,

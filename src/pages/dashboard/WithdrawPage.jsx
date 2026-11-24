@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft, CreditCard, CheckCircle2, X, AlertCircle, ShieldCheck } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
@@ -10,10 +10,25 @@ export const WithdrawPage = () => {
 
   const available = wallet?.availableBalance ?? 0;
   const [amount, setAmount] = useState('');
+  const [minWithdrawal, setMinWithdrawal] = useState(200);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [toastMsg, setToastMsg] = useState('');
   const [toastType, setToastType] = useState('success');
+
+  useEffect(() => {
+    const fetchLimits = async () => {
+      try {
+        const res = await api.get('/settings/limits');
+        if (res.data?.success && res.data.data?.minWithdrawal != null) {
+          setMinWithdrawal(Number(res.data.data.minWithdrawal));
+        }
+      } catch (err) {
+        // Fall back gracefully to 200
+      }
+    };
+    fetchLimits();
+  }, []);
 
   const numAmount = Number(amount) || 0;
   const fee = Math.round(numAmount * 0.10);
@@ -40,8 +55,8 @@ export const WithdrawPage = () => {
       return;
     }
 
-    if (numAmount < 120) {
-      showToast('Minimum withdrawal amount is ₹120', 'error');
+    if (numAmount < minWithdrawal) {
+      showToast(`Minimum withdrawal amount is ₹${minWithdrawal}`, 'error');
       return;
     }
 
@@ -201,7 +216,7 @@ export const WithdrawPage = () => {
           </div>
 
           <div className="text-[11px] text-slate-400 font-medium">
-            Minimum withdrawal ₹120
+            Minimum withdrawal ₹{minWithdrawal}
           </div>
 
           {/* Percentage Presets */}
@@ -253,7 +268,7 @@ export const WithdrawPage = () => {
               <span className="w-5 h-5 rounded-full bg-blue-50 text-[#0077B6] font-bold flex items-center justify-center shrink-0 text-[11px]">
                 1
               </span>
-              <span>Minimum withdrawal amount is ₹120.</span>
+              <span>Minimum withdrawal amount is ₹{minWithdrawal}.</span>
             </div>
             <div className="flex gap-2.5">
               <span className="w-5 h-5 rounded-full bg-blue-50 text-[#0077B6] font-bold flex items-center justify-center shrink-0 text-[11px]">

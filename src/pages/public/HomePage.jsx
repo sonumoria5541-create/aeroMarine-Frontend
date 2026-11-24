@@ -39,6 +39,12 @@ export const HomePage = () => {
   );
 
   useEffect(() => {
+    // Explicitly clear any legacy notice flags from previous sessions
+    try {
+      sessionStorage.removeItem('aeromarine_notice_seen');
+      localStorage.removeItem('aeromarine_notice_seen');
+    } catch (e) {}
+
     const fetchAppearance = async () => {
       try {
         const res = await api.get('/appearance');
