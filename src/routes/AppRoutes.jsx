@@ -30,6 +30,18 @@ import { AdminOrdersPage } from '../pages/admin/AdminOrdersPage';
 import { AdminEarningsPage } from '../pages/admin/AdminEarningsPage';
 import { AdminSettingsPage } from '../pages/admin/AdminSettingsPage';
 import { AdminAuditLogsPage } from '../pages/admin/AdminAuditLogsPage';
+import { AdminPagesPage } from '../pages/admin/AdminPagesPage';
+import { AdminPageEditorPage } from '../pages/admin/AdminPageEditorPage';
+import { AdminMediaPage } from '../pages/admin/AdminMediaPage';
+import { AdminInquiriesPage } from '../pages/admin/AdminInquiriesPage';
+import { AdminAppearancePage } from '../pages/admin/AdminAppearancePage';
+import { AdminNavigationPage } from '../pages/admin/AdminNavigationPage';
+import { AdminSeoPage } from '../pages/admin/AdminSeoPage';
+import { AdminStaffPage } from '../pages/admin/AdminStaffPage';
+import { ContactPage } from '../pages/public/ContactPage';
+import { ContainersPage } from '../pages/public/ContainersPage';
+import { LegalPage } from '../pages/public/LegalPage';
+import { DynamicPage } from '../pages/public/DynamicPage';
 
 export const AppRoutes = () => {
   return (
@@ -38,6 +50,13 @@ export const AppRoutes = () => {
         {/* Core Nav & Public Pages */}
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<AboutPage />} />
+        <Route path="/contact" element={<ContactPage />} />
+        <Route path="/containers" element={<ContainersPage />} />
+        <Route path="/terms" element={<LegalPage />} />
+        <Route path="/privacy" element={<LegalPage />} />
+        <Route path="/risk-disclosure" element={<LegalPage />} />
+        <Route path="/refund-policy" element={<LegalPage />} />
+        <Route path="/page/:slug" element={<DynamicPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
 
@@ -247,6 +266,17 @@ export const AppRoutes = () => {
         }
       >
         <Route index element={<AdminOverviewPage />} />
+        {/* CMS & Website Management Ecosystem */}
+        <Route path="pages" element={<AdminPagesPage />} />
+        <Route path="pages/:id" element={<AdminPageEditorPage />} />
+        <Route path="media" element={<AdminMediaPage />} />
+        <Route path="inquiries" element={<AdminInquiriesPage />} />
+        <Route path="appearance" element={<AdminAppearancePage />} />
+        <Route path="navigation" element={<AdminNavigationPage />} />
+        <Route path="seo" element={<AdminSeoPage />} />
+        <Route path="staff" element={<AdminStaffPage />} />
+
+        {/* Financial & Fleet Operations */}
         <Route path="deposits" element={<AdminDepositsPage />} />
         <Route path="withdrawals" element={<AdminWithdrawalsPage />} />
         <Route path="users" element={<AdminUsersPage />} />
@@ -257,6 +287,16 @@ export const AppRoutes = () => {
         <Route path="settings" element={<AdminSettingsPage />} />
         <Route path="audit-logs" element={<AdminAuditLogsPage />} />
       </Route>
+
+      {/* Dynamic CMS Page Catch-all for Custom Landing Pages */}
+      <Route
+        path="/:slug"
+        element={
+          <MobileShell>
+            <DynamicPage />
+          </MobileShell>
+        }
+      />
 
       {/* Catch-all redirect */}
       <Route path="*" element={<Navigate to="/" replace />} />

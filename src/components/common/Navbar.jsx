@@ -1,42 +1,106 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { Anchor, Menu, X, ArrowRight, LayoutDashboard, ShieldCheck, LogOut } from 'lucide-react';
+import { Anchor, Menu, X, ArrowRight, LayoutDashboard, ShieldCheck, LogOut, Sparkles } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import api from '../../lib/api';
+
+const DEFAULT_NAV_LINKS = [
+  { name: 'Fleet Containers', href: '/containers' },
+  { name: 'Maritime Operations', href: '/about' },
+  { name: 'Contact Desk', href: '/contact' },
+  { name: 'Legal & Risk', href: '/terms' },
+];
 
 export const Navbar = () => {
   const { user, isAdmin, logout } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [navLinks, setNavLinks] = useState(DEFAULT_NAV_LINKS);
+  const [branding, setBranding] = useState(null);
+  const [announcement, setAnnouncement] = useState(null);
   const location = useLocation();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchNavAndAppearance = async () => {
+      try {
+        const [navRes, appRes] = await Promise.allSettled([
+          api.get('/navigation?location=header'),
+          api.get('/appearance'),
+        ]);
+
+        if (
+          navRes.status === 'fulfilled' &&
+          navRes.value.data?.success &&
+          navRes.value.data.data?.items?.length > 0
+        ) {
+          const items = navRes.value.data.data.items.map((i) => ({
+            name: i.label,
+            href: i.url,
+            openInNewTab: i.openInNewTab,
+          }));
+          setNavLinks(items);
+        }
+
+        if (appRes.status === 'fulfilled' && appRes.value.data?.success) {
+          const app = appRes.value.data.data;
+          if (app.branding) {
+            setBranding(app.branding);
+          }
+          if (app.announcement?.enabled && app.announcement?.text) {
+            setAnnouncement(app.announcement.text);
+          }
+        }
+      } catch (err) {
+        // Fall back gracefully to hardcoded defaults
+      }
+    };
+
+    fetchNavAndAppearance();
+  }, []);
 
   const handleLogout = async () => {
     await logout();
     navigate('/login');
   };
 
-  const navLinks = [
-    { name: 'Fleet Containers', href: '/containers' },
-    { name: 'Maritime Operations', href: '/about' },
-    { name: 'Contact Desk', href: '/contact' },
-    { name: 'Legal & Risk', href: '/terms' },
-  ];
-
   return (
     <nav className="sticky top-0 z-40 bg-ocean-900/95 backdrop-blur-md border-b border-ocean-800 text-white">
+      {/* Dynamic Announcement Bar if enabled in Admin Appearance */}
+      {announcement && (
+        <div className="bg-gradient-to-r from-teal-brand via-ocean-700 to-container-orange text-white text-[11px] font-bold py-1.5 px-4 text-center tracking-wide flex items-center justify-center gap-2 shadow-inner">
+          <Sparkles className="w-3.5 h-3.5 animate-pulse text-amber-200" />
+          <span>{announcement}</span>
+        </div>
+      )}
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 sm:h-20">
           {/* Brand Logo */}
           <Link to="/" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-teal-brand to-ocean-700 flex items-center justify-center shadow-lg shadow-teal-brand/20 group-hover:scale-105 transition-transform">
-              <Anchor className="w-6 h-6 text-white" />
-            </div>
+            {branding?.logo ? (
+              <img
+                src={branding.logo}
+                alt={branding.siteName || 'AeroMarine'}
+                className="h-10 w-auto object-contain max-w-[140px]"
+              />
+            ) : (
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-teal-brand to-ocean-700 flex items-center justify-center shadow-lg shadow-teal-brand/20 group-hover:scale-105 transition-transform">
+                <Anchor className="w-6 h-6 text-white" />
+              </div>
+            )}
             <div>
               <span className="text-xl sm:text-2xl font-black tracking-tight text-white font-display">
-                AERO<span className="text-teal-brand">MARINE</span>
+                {branding?.siteName ? (
+                  branding.siteName
+                ) : (
+                  <>
+                    AERO<span className="text-teal-brand">MARINE</span>
+                  </>
+                )}
               </span>
               <span className="block text-[10px] uppercase font-bold tracking-widest text-slate-400 -mt-1">
-                Global Logistics
+                {branding?.tagline || 'Global Logistics'}
               </span>
             </div>
           </Link>
@@ -47,6 +111,8 @@ export const Navbar = () => {
               <Link
                 key={link.name}
                 to={link.href}
+                target={link.openInNewTab ? '_blank' : '_self'}
+                rel={link.openInNewTab ? 'noopener noreferrer' : undefined}
                 className={`text-sm font-medium transition-colors hover:text-teal-brand ${
                   location.pathname === link.href ? 'text-teal-brand' : 'text-slate-300'
                 }`}

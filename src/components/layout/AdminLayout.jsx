@@ -19,6 +19,13 @@ import {
   Compass,
   ChevronLeft,
   ChevronRight,
+  Layers,
+  HardDrive,
+  Inbox,
+  Palette,
+  Globe,
+  Sliders,
+  UserCheck,
 } from 'lucide-react';
 
 export const AdminLayout = () => {
@@ -55,15 +62,27 @@ export const AdminLayout = () => {
   };
 
   const navItems = [
-    { name: 'Admin Overview', href: '/admin', icon: LayoutDashboard },
-    { name: 'Deposit Requests', href: '/admin/deposits', icon: ArrowDownLeft },
-    { name: 'Withdrawal Payouts', href: '/admin/withdrawals', icon: ArrowUpRight },
-    { name: 'User Management', href: '/admin/users', icon: Users },
-    { name: 'Container Fleet Plans', href: '/admin/plans', icon: Box },
-    { name: 'Fleet Orders', href: '/admin/orders', icon: ShoppingCart },
-    { name: 'Daily Earnings Engine', href: '/admin/earnings', icon: TrendingUp },
-    { name: 'Platform Settings', href: '/admin/settings', icon: Settings },
-    { name: 'Security Audit Logs', href: '/admin/audit-logs', icon: FileText },
+    // 1. Overview & CMS Engine
+    { name: 'Admin Overview', href: '/admin', icon: LayoutDashboard, section: 'Core' },
+    { name: 'CMS Website Pages', href: '/admin/pages', icon: Layers, section: 'CMS & Website' },
+    { name: 'Media Asset Library', href: '/admin/media', icon: HardDrive, section: 'CMS & Website' },
+    { name: 'Port Inquiries Desk', href: '/admin/inquiries', icon: Inbox, section: 'CMS & Website' },
+    { name: 'Appearance & Design', href: '/admin/appearance', icon: Palette, section: 'CMS & Website' },
+    { name: 'Navigation Menus', href: '/admin/navigation', icon: Menu, section: 'CMS & Website' },
+    { name: 'SEO & Sitemap Engine', href: '/admin/seo', icon: Globe, section: 'CMS & Website' },
+
+    // 2. Financial & Fleet Operations
+    { name: 'Deposit Requests', href: '/admin/deposits', icon: ArrowDownLeft, section: 'Operations' },
+    { name: 'Withdrawal Payouts', href: '/admin/withdrawals', icon: ArrowUpRight, section: 'Operations' },
+    { name: 'Container Fleet Plans', href: '/admin/plans', icon: Box, section: 'Operations' },
+    { name: 'Fleet Orders', href: '/admin/orders', icon: ShoppingCart, section: 'Operations' },
+    { name: 'Daily Earnings Engine', href: '/admin/earnings', icon: TrendingUp, section: 'Operations' },
+
+    // 3. User Governance & Governance
+    { name: 'User Management', href: '/admin/users', icon: Users, section: 'Governance' },
+    { name: 'Staff & Roles (RBAC)', href: '/admin/staff', icon: UserCheck, section: 'Governance' },
+    { name: 'Platform Settings', href: '/admin/settings', icon: Settings, section: 'Governance' },
+    { name: 'Security Audit Logs', href: '/admin/audit-logs', icon: FileText, section: 'Governance' },
   ];
 
   const bottomNavItems = [

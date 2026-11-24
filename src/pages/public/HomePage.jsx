@@ -34,6 +34,23 @@ export const HomePage = () => {
   const [toastMsg, setToastMsg] = useState('');
   const [toastType, setToastType] = useState('success');
   const [modalError, setModalError] = useState('');
+  const [announcementText, setAnnouncementText] = useState(
+    'Welcome to AeroMarine Shipping & Exports! Member 98***12 just received ₹4,354 daily yield! • Fast automated withdrawals active.'
+  );
+
+  useEffect(() => {
+    const fetchAppearance = async () => {
+      try {
+        const res = await api.get('/appearance');
+        if (res.data?.success && res.data.data?.announcement?.text) {
+          setAnnouncementText(res.data.data.announcement.text);
+        }
+      } catch (e) {
+        // Fall back gracefully
+      }
+    };
+    fetchAppearance();
+  }, []);
 
   const totalBalance = (wallet?.availableBalance || 0) + (wallet?.rechargeBalance || 0);
 
@@ -212,7 +229,7 @@ export const HomePage = () => {
         <div className="flex items-center gap-2 px-3 py-2 bg-blue-50/70 border border-blue-100/80 rounded-xl text-slate-700 text-xs overflow-hidden">
           <Volume2 size={16} className="text-[#0077B6] shrink-0 animate-pulse" />
           <div className="whitespace-nowrap overflow-hidden text-ellipsis text-[11px] font-medium text-slate-600">
-            Welcome to AeroMarine Shipping & Exports! Member 98***12 just received ₹4,354 daily yield! • Fast automated withdrawals active.
+            {announcementText}
           </div>
         </div>
       </div>

@@ -1,8 +1,28 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Anchor, ShieldAlert, Globe, Compass, Mail, Phone, MapPin } from 'lucide-react';
+import api from '../../lib/api';
 
 export const Footer = () => {
+  const [appearance, setAppearance] = useState(null);
+
+  useEffect(() => {
+    const fetchAppearance = async () => {
+      try {
+        const res = await api.get('/appearance');
+        if (res.data?.success) {
+          setAppearance(res.data.data);
+        }
+      } catch (e) {
+        // Fall back gracefully
+      }
+    };
+    fetchAppearance();
+  }, []);
+
+  const branding = appearance?.branding;
+  const footerData = appearance?.footer;
+
   return (
     <footer className="bg-ocean-950 text-slate-400 border-t border-ocean-800/80 pt-16 pb-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -10,25 +30,41 @@ export const Footer = () => {
           {/* Brand Info */}
           <div className="lg:col-span-2 space-y-4">
             <Link to="/" className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-teal-brand to-ocean-700 flex items-center justify-center text-white">
-                <Anchor className="w-6 h-6" />
-              </div>
+              {branding?.logo ? (
+                <img
+                  src={branding.logo}
+                  alt={branding.siteName || 'AeroMarine'}
+                  className="h-10 w-auto object-contain max-w-[140px]"
+                />
+              ) : (
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-teal-brand to-ocean-700 flex items-center justify-center text-white">
+                  <Anchor className="w-6 h-6" />
+                </div>
+              )}
               <div>
                 <span className="text-2xl font-black tracking-tight text-white font-display">
-                  AERO<span className="text-teal-brand">MARINE</span>
+                  {branding?.siteName ? (
+                    branding.siteName
+                  ) : (
+                    <>
+                      AERO<span className="text-teal-brand">MARINE</span>
+                    </>
+                  )}
                 </span>
                 <span className="block text-[10px] uppercase font-bold tracking-widest text-slate-400 -mt-1">
-                  Maritime Capital Platform
+                  {branding?.tagline || 'Maritime Capital Platform'}
                 </span>
               </div>
             </Link>
             <p className="text-sm text-slate-400 leading-relaxed max-w-sm">
-              Connecting maritime capital with verified global container logistics and international freight charter lines.
-              Operating under strict auditable ledger governance.
+              {footerData?.aboutText ||
+                'Connecting maritime capital with verified global container logistics and international freight charter lines. Operating under strict auditable ledger governance.'}
             </p>
             <div className="flex items-center gap-3 text-xs text-slate-300">
               <MapPin className="w-4 h-4 text-teal-brand flex-shrink-0" />
-              <span>International Port Complex, Nariman Point, Mumbai</span>
+              <span>
+                {footerData?.address || 'International Port Complex, Nariman Point, Mumbai'}
+              </span>
             </div>
           </div>
 
@@ -98,11 +134,11 @@ export const Footer = () => {
             <ul className="space-y-2.5 text-sm">
               <li className="flex items-center gap-2">
                 <Mail className="w-4 h-4 text-container-orange" />
-                <span>support@aeromarine.local</span>
+                <span>{footerData?.email || 'support@aeromarine.local'}</span>
               </li>
               <li className="flex items-center gap-2">
                 <Phone className="w-4 h-4 text-teal-brand" />
-                <span>+91 22 4988 2000</span>
+                <span>{footerData?.phone || '+91 22 4988 2000'}</span>
               </li>
               <li className="flex items-center gap-2">
                 <Globe className="w-4 h-4 text-sky-400" />
@@ -124,7 +160,10 @@ export const Footer = () => {
             </p>
           </div>
           <div className="flex flex-col sm:flex-row items-center justify-between pt-4 text-slate-400 text-xs gap-4">
-            <p>© {new Date().getFullYear()} AeroMarine Logistics Global Ltd. All rights reserved.</p>
+            <p>
+              {footerData?.copyrightText ||
+                `© ${new Date().getFullYear()} AeroMarine Logistics Global Ltd. All rights reserved.`}
+            </p>
             <p className="flex items-center gap-1">
               <Compass className="w-3.5 h-3.5 text-teal-brand" />
               <span>Double-Entry Balanced Ledger Infrastructure v1.0</span>
